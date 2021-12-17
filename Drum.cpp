@@ -17,9 +17,10 @@ Drum::Drum(const std::string &alphabet, const std::string &ro, const std::string
 
 Drum::Drum(const std::string &alphabet, uint8_t ro, uint8_t nl) {
 
-    //Setting drum setting
-    this->ring_offset = ro;
-    this->notch_location = nl;
+    //Setting reflector settings by default
+    this->ring_offset = 0;
+    this->notch_location = 0;
+    this->reflector = true;
 
     //Stringstream allows for easier operations on strings, such as splitting by delimiter
     std::stringstream ss(alphabet);
@@ -38,10 +39,14 @@ Drum::Drum(const std::string &alphabet, uint8_t ro, uint8_t nl) {
     }
 
     //Check if the drum has reflector property (all cycles of length 2)
-    this->reflector = true;
     for(auto iter = this->outputs.begin(); iter<this->outputs.end(); ++iter){
-        if (!(process_character_forward(*iter, 0) == process_character_backward(*iter, 0))){
+        if (process_character_forward(*iter, 0) != process_character_backward(*iter, 0)){
+
+            //Setting standard drum settins
+            this->ring_offset = ro;
+            this->notch_location = nl;
             this->reflector = false;
+
             break;
         }
     }
@@ -49,18 +54,23 @@ Drum::Drum(const std::string &alphabet, uint8_t ro, uint8_t nl) {
 
 Drum::Drum(std::vector<char> &alphabet, uint8_t ro, uint8_t nl) {
 
-    //Setting drum settings
-    this->ring_offset = ro;
-    this->notch_location = nl;
+    //Setting reflector settings by default
+    this->ring_offset = 0;
+    this->notch_location = 0;
+    this->reflector = true;
 
     //std::vector should posses an implementation of copy constructor. Otherwise this might not work
     this->outputs = alphabet;
 
     //Check if the drum has reflector property (all cycles of length 2)
-    this->reflector = true;
     for(auto iter = this->outputs.begin(); iter<this->outputs.end(); ++iter){
-        if (!(process_character_forward(*iter, 0) == process_character_backward(*iter, 0))){
+        if (process_character_forward(*iter, 0) != process_character_backward(*iter, 0)){
+
+            //Setting standard drum settins
+            this->ring_offset = ro;
+            this->notch_location = nl;
             this->reflector = false;
+
             break;
         }
     }
