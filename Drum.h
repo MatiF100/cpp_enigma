@@ -24,6 +24,9 @@ class Drum {
     //! Contains location of notch that allows the next drum to be rotated
     uint8_t notch_location;
 
+    //! Says if the drum is an reflector(true), or normal(false) drum
+    bool reflector;
+
 public:
     //! Basic, no argument constructor. It only initializes default values as 0;
     Drum();

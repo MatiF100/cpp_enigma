@@ -3,8 +3,9 @@
 
 int main() {
     std::cout << "Hello, World!" << std::endl;
-    Drum d1("E,K,M,F,L,G,D,Q,V,Z,N,T,O,W,Y,H,X,U,S,P,A,I,B,R,C,J", "5", "2");
-    std::string wiad = "Projekt Fesza na CPP 1 xD '_'";
+    Drum d1("E,K,M,F,L,G,D,Q,V,Z,N,T,O,W,Y,H,X,U,S,P,A,I,B,R,C,J", "0", "2");
+    Drum d2("Y,R,U,H,Q,S,L,D,P,X,N,G,O,K,M,I,E,B,F,Z,C,W,V,J,A,T", 0, 0);
+    std::string wiad = "AAAAAaaaaAAAABBBBBBBBBBBSSss";
     std::cout << "Przed szyfrowaniem: " << wiad << std::endl << "Po szyfrowaniu: ";
     std::string szyfrogram;
     for (auto iter = wiad.cbegin(); iter != wiad.end(); ++iter){

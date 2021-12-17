@@ -8,6 +8,7 @@
 Drum::Drum() {
     this->notch_location = 0;
     this->ring_offset = 0;
+    this->reflector = false;
 }
 
 //Calling other constructor with partially parsed values - example of initialization list
@@ -35,6 +36,15 @@ Drum::Drum(const std::string &alphabet, uint8_t ro, uint8_t nl) {
         if (tmp >= 'a' && tmp <= 'z') tmp -= 32;
         this->outputs.push_back(tmp);
     }
+
+    //Check if the drum has reflector property (all cycles of length 2)
+    this->reflector = true;
+    for(auto iter = this->outputs.begin(); iter<this->outputs.end(); ++iter){
+        if (!(process_character_forward(*iter, 0) == process_character_backward(*iter, 0))){
+            this->reflector = false;
+            break;
+        }
+    }
 }
 
 Drum::Drum(std::vector<char> &alphabet, uint8_t ro, uint8_t nl) {
@@ -45,6 +55,15 @@ Drum::Drum(std::vector<char> &alphabet, uint8_t ro, uint8_t nl) {
 
     //std::vector should posses an implementation of copy constructor. Otherwise this might not work
     this->outputs = alphabet;
+
+    //Check if the drum has reflector property (all cycles of length 2)
+    this->reflector = true;
+    for(auto iter = this->outputs.begin(); iter<this->outputs.end(); ++iter){
+        if (!(process_character_forward(*iter, 0) == process_character_backward(*iter, 0))){
+            this->reflector = false;
+            break;
+        }
+    }
 }
 Drum::~Drum() {
     //Nothing necessary here.
