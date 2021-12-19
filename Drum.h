@@ -19,15 +19,16 @@
 class Drum {
     //! Contains vector of drum's output connections as their offset from (by default) latin alphabet
     std::vector<char> outputs;
-    //! Contains offset of numbered ring from it's nominal position on the drum
-    uint8_t ring_offset;
     //! Contains location of notch that allows the next drum to be rotated
     uint8_t notch_location;
 
+public:
     //! Says if the drum is an reflector(true), or normal(false) drum
     bool reflector;
 
-public:
+    //! Contains offset of numbered ring from it's nominal position on the drum
+    uint8_t ring_offset;
+
     //! Basic, no argument constructor. It only initializes default values as 0;
     Drum();
 
@@ -80,6 +81,15 @@ public:
      * @return Processed character, being value corresponding to current drum configuration and rotation
      */
     char process_character_backward(char c, uint8_t offset);
+
+    //! Function that returns real location of the notch that allows to rotate next drum in a row
+    /*!
+     * The real offset is sum of the position of the notch at the alphabetic ring and the offset of this ring from it's nominal position
+     * @return Sum of notch postion and alphabetic ring offset
+     */
+    uint8_t real_notch_location(){
+        return this->notch_location + this->ring_offset;
+    }
 };
 
 
