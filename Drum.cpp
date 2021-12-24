@@ -11,6 +11,15 @@ Drum::Drum() {
     this->reflector = false;
 }
 
+Drum::Drum(const Drum &templ) {
+    //Vector performs deep copy by default, so this is enough
+    this->outputs = templ.outputs;
+
+    this->ring_offset = templ.ring_offset;
+    this->notch_location = templ.notch_location;
+    this->reflector = templ.reflector;
+}
+
 //Calling other constructor with partially parsed values - example of initialization list
 Drum::Drum(const std::string &alphabet, const std::string &ro, const std::string &nl)
 : Drum(alphabet, std::stoi(ro), std::stoi(nl)){}

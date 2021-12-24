@@ -32,6 +32,13 @@ public:
     //! Basic, no argument constructor. It only initializes default values as 0;
     Drum();
 
+    //! Copy constructor.
+    /*!
+     * Creates exact copy of the drum, but ensures correct vector reallocation
+     * @param templ Reference to object desired for copying
+     */
+    Drum(const Drum& templ);
+
     //! FromStrings constructor; Takes all arguments as non-parsed strings
     /*!
      *
