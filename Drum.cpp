@@ -102,8 +102,10 @@ char Drum::process_character_forward(char c, uint8_t offset){
     if ((c >= 'a' && c <= 'z')) {c-=32; capital = 1;}
 
     //Calculate
+    //real_offset refers to letter that the signal goes into, considering it's rotation and alphabetic ring's position
     uint8_t real_offset = (DRUM_ALPHABET_LEN + offset - this->ring_offset + c - 65) % DRUM_ALPHABET_LEN;
 
+    //Return value is letter corresponding to one calculated above, but also with compensation for current drum's state
     return (char)((this->outputs[real_offset] - 'A' - offset + this->ring_offset + DRUM_ALPHABET_LEN) % DRUM_ALPHABET_LEN + 'A' + capital * 32);
 }
 
@@ -119,21 +121,20 @@ char Drum::process_character_backward(char c, uint8_t offset){
     if ((c >= 'a' && c <= 'z')) {c-=32; capital = 1;}
 
     //Calculate
+    //real_rev_ce is offset of the drum output the signal goes into, considering the drum's rotation and its alphabetic ring's position
     uint8_t rev_real_c = ((c - 'A') + offset - this->ring_offset + DRUM_ALPHABET_LEN) % DRUM_ALPHABET_LEN;
 
 
-    //First we need to find index of character in a scrambled alphabet of the drum
+    //Finding index of character in a scrambled alphabet of the drum
     uint8_t reversed_offset = 0;
     for (; reversed_offset<DRUM_ALPHABET_LEN; reversed_offset++){
         if (rev_real_c + 'A' == this->outputs[reversed_offset]) break;
     }
 
     //Then using known current offset values we can calculate corresponding value in a non scrambled alphabet
-    int8_t real_c_idx = reversed_offset - offset + this->ring_offset;
-    if (real_c_idx < 0){
-        real_c_idx += DRUM_ALPHABET_LEN;
-    }
-    real_c_idx %= DRUM_ALPHABET_LEN;
+    //By taking drum's state into consideration
+    int8_t real_c_idx = (reversed_offset - offset + this->ring_offset + DRUM_ALPHABET_LEN) % DRUM_ALPHABET_LEN;
 
+    //As all calculations are already done, returning offset converted to number
     return (char)(real_c_idx + 65 + capital * 32);
 }
