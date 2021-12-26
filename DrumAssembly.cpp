@@ -3,6 +3,7 @@
 //
 
 #include "DrumAssembly.h"
+bool is_alphabetic(char in);
 
 DrumAssembly::DrumAssembly(const Drum &r, const Drum &m, const Drum &l, const Drum &refl) {
     this->reflector = new Drum(refl);
@@ -79,7 +80,7 @@ bool DrumAssembly::set_reflector_drum(const Drum &drum) {
 }
 
 char DrumAssembly::process_letter(char in) {
-    if (this->reflector == nullptr || this->left == nullptr || this->right == nullptr || this->middle == nullptr)
+    if (this->reflector == nullptr || this->left == nullptr || this->right == nullptr || this->middle == nullptr || !is_alphabetic(in))
         return in;
 
     //In real machine, characters are processed AFTER the drums perform rotation
@@ -106,12 +107,22 @@ bool DrumAssembly::rotate_drums() {
     uint8_t middle_notch = this->middle->real_notch_location();
     //leftmost notch is not needed, as there are no more drums for it to rotate
 
-    if(this->offset[1] == middle_notch)
+    if (this->offset[1] == middle_notch) {
+        ++this->offset[1] %= 26; //Double step simulation
         ++this->offset[2] %= 26;
-    if(this->offset[0] == right_notch)
+    }
+
+    if(this->offset[0] == right_notch) {
         ++this->offset[1] %= 26;
+    }
+
     ++this->offset[0] %= 26;
 
     return true;
 }
 
+bool is_alphabetic(char in){
+    if (in >= 'A' && in <= 'Z' || in >= 'a' && in <= 'z')
+        return true;
+    return false;
+}
