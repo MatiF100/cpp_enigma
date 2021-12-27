@@ -48,7 +48,7 @@ bool DrumAssembly::set_drums(const Drum &r, const Drum &m, const Drum &l, const 
 
 
 bool DrumAssembly::set_left_drum(const Drum &drum) {
-    if(drum.reflector == false) {
+    if(!drum.reflector && !drum.narrow) {
         this->left = new Drum(drum);
         return true;
     }
@@ -56,7 +56,7 @@ bool DrumAssembly::set_left_drum(const Drum &drum) {
 }
 
 bool DrumAssembly::set_middle_drum(const Drum &drum) {
-    if(drum.reflector == false) {
+    if(!drum.reflector && !drum.narrow) {
         this->middle = new Drum(drum);
         return true;
     }
@@ -64,7 +64,7 @@ bool DrumAssembly::set_middle_drum(const Drum &drum) {
 }
 
 bool DrumAssembly::set_right_drum(const Drum &drum) {
-    if(drum.reflector == false) {
+    if(!drum.reflector && !drum.narrow) {
         this->right = new Drum(drum);
         return true;
     }
@@ -72,7 +72,7 @@ bool DrumAssembly::set_right_drum(const Drum &drum) {
 }
 
 bool DrumAssembly::set_reflector_drum(const Drum &drum) {
-    if(drum.reflector == true) {
+    if(drum.reflector && !drum.narrow) {
         this->reflector = new Drum(drum);
         return true;
     }
@@ -88,16 +88,17 @@ char DrumAssembly::process_letter(char in) {
     return this->right->process_character_backward(
             this->middle->process_character_backward(
                 this->left->process_character_backward(
-                    this->reflector->process_character_forward( //Forward or backward doesn't make difference with reflector
+                    this->reflector->process_character_forward( //Forward or backward doesn't make difference with reflector, but offset needs to be calculated accordingly or it will not behave as real device
                         this->left->process_character_forward(
                             this->middle->process_character_forward(
-                                this->right->process_character_forward(in, this->offset[0]), this->offset[1]), this->offset[2]), 0), this->offset[2]), this->offset[1]), this->offset[0]);
+                                this->right->process_character_forward(in, this->offset[0]), this->offset[1]), this->offset[2]), this->refl_offset), this->offset[2]), this->offset[1]), this->offset[0]);
 }
 
-void DrumAssembly::set_drums_offset(uint8_t left, uint8_t middle, uint8_t right) {
+void DrumAssembly::set_drums_offset(uint8_t left, uint8_t middle, uint8_t right, uint8_t reflector) {
     this->offset[0] = right % 26;
     this->offset[1] = middle % 26;
     this->offset[2] = left % 26;
+    this->refl_offset = reflector % 26;
 }
 
 bool DrumAssembly::rotate_drums() {

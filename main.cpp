@@ -12,13 +12,13 @@ int main() {
     std::cout << "Przed szyfrowaniem: " << wiad << std::endl << "Po szyfrowaniu: ";
     std::string szyfrogram;
     DrumAssembly module(d1, d2, d3, rev);
-    module.set_drums_offset(1,0,0);
+    module.set_drums_offset(1,0,0, 0);
 
     for (auto iter = wiad.cbegin(); iter != wiad.end(); ++iter){
         szyfrogram += module.process_letter(*iter);
     }
     std::cout << szyfrogram << std::endl << "Po deszyfracji: ";
-    module.set_drums_offset(1,0,0);
+    module.set_drums_offset(1,0,0, 0);
     for (auto iter = szyfrogram.cbegin(); iter != szyfrogram.end(); ++iter){
         std::cout << module.process_letter(*iter);
     }

@@ -9,6 +9,7 @@ Drum::Drum() {
     this->notch_location = 0;
     this->ring_offset = 0;
     this->reflector = false;
+    this->narrow = false;
 }
 
 Drum::Drum(const Drum &templ) {
@@ -18,18 +19,20 @@ Drum::Drum(const Drum &templ) {
     this->ring_offset = templ.ring_offset;
     this->notch_location = templ.notch_location;
     this->reflector = templ.reflector;
+    this->narrow = templ.narrow;
 }
 
 //Calling other constructor with partially parsed values - example of initialization list
-Drum::Drum(const std::string &alphabet, const std::string &ro, const std::string &nl)
-: Drum(alphabet, std::stoi(ro), std::stoi(nl)){}
+Drum::Drum(const std::string &alphabet, const std::string &ro, const std::string &nl, bool narrow)
+: Drum(alphabet, std::stoi(ro), std::stoi(nl), narrow){}
 
-Drum::Drum(const std::string &alphabet, uint8_t ro, uint8_t nl) {
+Drum::Drum(const std::string &alphabet, uint8_t ro, uint8_t nl, bool narrow) {
 
     //Setting reflector settings by default
     this->ring_offset = 0;
     this->notch_location = 0;
     this->reflector = true;
+    this->narrow = narrow;
 
     //Stringstream allows for easier operations on strings, such as splitting by delimiter
     std::stringstream ss(alphabet);
@@ -61,12 +64,13 @@ Drum::Drum(const std::string &alphabet, uint8_t ro, uint8_t nl) {
     }
 }
 
-Drum::Drum(std::vector<char> &alphabet, uint8_t ro, uint8_t nl) {
+Drum::Drum(std::vector<char> &alphabet, uint8_t ro, uint8_t nl, bool narrow) {
 
     //Setting reflector settings by default
-    this->ring_offset = 0;
+    this->ring_offset = ro;
     this->notch_location = 0;
     this->reflector = true;
+    this->narrow = narrow;
 
     //std::vector should posses an implementation of copy constructor. Otherwise this might not work
     this->outputs = alphabet;
@@ -76,7 +80,6 @@ Drum::Drum(std::vector<char> &alphabet, uint8_t ro, uint8_t nl) {
         if (process_character_forward(*iter, 0) != process_character_backward(*iter, 0)){
 
             //Setting standard drum settins
-            this->ring_offset = ro;
             this->notch_location = nl;
             this->reflector = false;
 
@@ -84,12 +87,11 @@ Drum::Drum(std::vector<char> &alphabet, uint8_t ro, uint8_t nl) {
         }
     }
 }
-Drum::~Drum() {
+Drum::~Drum() = default;
     //Nothing necessary here.
     //Since std::vector is used, it's destructor will do all the deallocating work for us
-}
-//A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z
-//E,K,M,F,L,G,D,Q,V,Z,N,T,O,W,Y,H,X,U,S,P,A,I,B,R,C,J
+    //So we can just use "default" keyword
+
 char Drum::process_character_forward(char c, uint8_t offset){
 
     //This is 0 for capital letters and 1 otherwise

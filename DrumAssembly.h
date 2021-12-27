@@ -19,6 +19,7 @@ class DrumAssembly {
     Drum* left;
     Drum* reflector;
     uint8_t offset[3] = {0,0,0};
+    uint8_t refl_offset = 0;
 
 public:
     //! Default constructor - initializes all pointers with 0
@@ -47,35 +48,35 @@ public:
      * @param l Reference to left (third and fifth) drum template
      * @param refl Reference to the far left (fourth) reflector drum. It's reflector flag must be set
      */
-    bool set_drums(const Drum& r, const Drum& m, const Drum& l, const Drum& refl);
+    [[nodiscard]]virtual bool set_drums(const Drum& r, const Drum& m, const Drum& l, const Drum& refl);
 
     //! Safe setter for left drum
     /*!
      * @param drum Reference to template drum
      * @return True if setting succesfull. False if drum cannot be set - possibly caused by reflector flag
      */
-    bool set_left_drum(const Drum& drum);
+    [[nodiscard]]bool set_left_drum(const Drum& drum);
 
     //! Safe setter for middle drum
     /*!
      * @param drum Reference to template drum
      * @return True if setting succesfull. False if drum cannot be set - possibly caused by reflector flag
      */
-    bool set_middle_drum(const Drum& drum);
+    [[nodiscard]]bool set_middle_drum(const Drum& drum);
 
     //! Safe setter for right drum
     /*!
      * @param drum Reference to template drum
      * @return True if setting succesfull. False if drum cannot be set - possibly caused by reflector flag
      */
-    bool set_right_drum(const Drum& drum);
+    [[nodiscard]]bool set_right_drum(const Drum& drum);
 
     //! Safe setter for reflector drum
     /*!
      * @param drum Reference to template drum
      * @return True if setting succesfull. False if drum cannot be set - possibly caused by reflector flag
      */
-    bool set_reflector_drum(const Drum& drum);
+    [[nodiscard]] virtual bool set_reflector_drum(const Drum& drum);
 
     //! Function to process letter by entire drum assembly - requires all of the drums to be set, and fails otherwise
     /*!
@@ -84,7 +85,7 @@ public:
      * @param in Character to be processed
      * @return Character after processing, or input character in case of failure
      */
-    char process_letter(char in);
+    virtual char process_letter(char in);
 
     //! Function to configure current offset for each drum
     /*!
@@ -93,14 +94,17 @@ public:
      * @param left Offset for the left drum
      * @param middle Offset for the middle drum
      * @param right Offset for the right drum
+     * @param reflector Offset for the reflector drum
      */
-    void set_drums_offset(uint8_t left, uint8_t middle, uint8_t right);
+    virtual void set_drums_offset(uint8_t left, uint8_t middle, uint8_t right, uint8_t reflector);
 
 
     //! This function reconfigures drums, by advancing the right-most by one position, and the rest as necessary
     /*!
      * Rotation of all the drums but first depends on location of specific notch on the drum's ring
      * It's position can actually vary, because ring can be adjusted before inserting it into machine
+     * It will move ONLY drums at positions 1-3, (right, middle and left) ignoring anything that follows
+     * This property is important when it comes to Kriegsenigma
      * @return True if rotation  was successful. False if could not get information about drum's notch location
      */
     bool rotate_drums();

@@ -3,4 +3,4 @@ project(CPPProject)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(CPPProject main.cpp Drum.cpp Drum.h Plugboard.cpp Plugboard.h DrumAssembly.cpp DrumAssembly.h)
+add_executable(CPPProject main.cpp Drum.cpp Drum.h Plugboard.cpp Plugboard.h DrumAssembly.cpp DrumAssembly.h DrumAssemblyK.cpp DrumAssemblyK.h)

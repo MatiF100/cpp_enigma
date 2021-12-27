@@ -22,9 +22,13 @@ class Drum {
     //! Contains location of notch that allows the next drum to be rotated
     uint8_t notch_location;
 
+
 public:
     //! Says if the drum is an reflector(true), or normal(false) drum
     bool reflector;
+
+    //! Informs if the drum is of narrow kind. Required by Kriegsenigma
+    bool narrow;
 
     //! Contains offset of numbered ring from it's nominal position on the drum
     uint8_t ring_offset;
@@ -46,7 +50,7 @@ public:
      * @param ro String value of ring offset
      * @param nl String value of notch location
      */
-    Drum(const std::string& alphabet, const std::string& ro, const std::string& nl);
+    Drum(const std::string& alphabet, const std::string& ro, const std::string& nl, bool narrow = false);
 
     //! FromStringAndValues constructor; Takes only offset and notch location as parsed integers
     /*!
@@ -55,7 +59,7 @@ public:
      * @param ro Value of ring offset
      * @param nl Value of notch location
      */
-    Drum(const std::string& alphabet, uint8_t ro, uint8_t nl);
+    Drum(const std::string& alphabet, uint8_t ro, uint8_t nl, bool narrow = false);
 
     //! FromValues constructor. All passed values should be of appropriate type
     /*!
@@ -64,7 +68,7 @@ public:
      * @param ro Value of ring offset
      * @param nl Value of notch location
      */
-    Drum(std::vector<char>& alphabet, uint8_t ro, uint8_t nl);
+    Drum(std::vector<char>& alphabet, uint8_t ro, uint8_t nl, bool narrow = false);
 
 
     //! Destructor, obvious bevavior
@@ -94,7 +98,7 @@ public:
      * The real offset is sum of the position of the notch at the alphabetic ring and the offset of this ring from it's nominal position
      * @return Sum of notch postion and alphabetic ring offset
      */
-    uint8_t real_notch_location(){
+    [[nodiscard]] uint8_t real_notch_location() const{
         return this->notch_location + this->ring_offset;
     }
 };
