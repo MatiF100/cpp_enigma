@@ -12,6 +12,7 @@
  * It's purpose is to add abstraction above individual drums
  * Making them more predictable and less prone to errors
  * It also keeps information about current offset of the drums, a.k.a their rotation
+ * In this version of drum assembly, you cannot fit any drum marked with "narrow" flag
  */
 class DrumAssembly {
     Drum* right;
@@ -53,28 +54,28 @@ public:
     //! Safe setter for left drum
     /*!
      * @param drum Reference to template drum
-     * @return True if setting succesfull. False if drum cannot be set - possibly caused by reflector flag
+     * @return True if setting succesfull. False if drum cannot be set - possibly caused by reflector or narrow flag
      */
     [[nodiscard]]bool set_left_drum(const Drum& drum);
 
     //! Safe setter for middle drum
     /*!
      * @param drum Reference to template drum
-     * @return True if setting succesfull. False if drum cannot be set - possibly caused by reflector flag
+     * @return True if setting succesfull. False if drum cannot be set - possibly caused by reflector or narrow flag
      */
     [[nodiscard]]bool set_middle_drum(const Drum& drum);
 
     //! Safe setter for right drum
     /*!
      * @param drum Reference to template drum
-     * @return True if setting succesfull. False if drum cannot be set - possibly caused by reflector flag
+     * @return True if setting succesfull. False if drum cannot be set - possibly caused by reflector or narrow flag
      */
     [[nodiscard]]bool set_right_drum(const Drum& drum);
 
     //! Safe setter for reflector drum
     /*!
      * @param drum Reference to template drum
-     * @return True if setting succesfull. False if drum cannot be set - possibly caused by reflector flag
+     * @return True if setting succesfull. False if drum cannot be set - possibly caused by reflector or narrow flag
      */
     [[nodiscard]] virtual bool set_reflector_drum(const Drum& drum);
 
