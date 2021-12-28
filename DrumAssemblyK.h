@@ -6,6 +6,7 @@
 #ifndef CPPPROJECT_DRUMASSEMBLYK_H
 #define CPPPROJECT_DRUMASSEMBLYK_H
 
+//class DrumAssembly;
 #include "DrumAssembly.h"
 
 //! Class holding information about extended Kriegsmarine enigma drum assembly (Kriegsenigma or Enigma Shark) with 4+1 configuration
@@ -17,7 +18,7 @@
  * This lack of major modification hovever has enforced redesiging both the reversing drum, and the drums used on fourth position
  * This redesigning is marked in they structure by setting the "narrow" flag during creation
  */
-class DrumAssemblyK : DrumAssembly {
+class DrumAssemblyK : public DrumAssembly {
     Drum* leftmost;
     uint8_t leftmost_offset;
 
@@ -26,7 +27,7 @@ class DrumAssemblyK : DrumAssembly {
      * And could create some undefined behavior if used incorrectly, so it is overriden with empty function
      * Because of this, it is declared as private
      */
-     bool set_drums(const Drum& r, const Drum& m, const Drum& l, const Drum& refl) override{}
+     bool set_drums(const Drum& r, const Drum& m, const Drum& l, const Drum& refl) override{return false;}
 public:
 
     //! Default constructor - initializes all pointers with 0
@@ -43,6 +44,13 @@ public:
      * @param refl Reference to the far left (fifth) reflector drum. It's reflector flag and narrow flag must be set
      */
     DrumAssemblyK(const Drum& r, const Drum& m, const Drum& l, const Drum& lm, const Drum& refl);
+
+    //! Copy constructor
+    /*!
+     * Assures that instantiating new object of the class with other one, actually results in proper memory allocation
+     * @param assembly Reference to assembly that shall be used as template
+     */
+    DrumAssemblyK(const DrumAssemblyK& assembly);
 
     //! Destructor. Deallocates memory for all existing drums, since all of them are allocated within the class
     ~DrumAssemblyK();
@@ -105,6 +113,15 @@ public:
 
     //! This function returns tuple containing all the drums offsets right to left, including reflector drum and thin additional drum
     std::tuple<uint8_t, uint8_t, uint8_t, uint8_t, uint8_t> get_offset();
+
+
+    //! Equal operator overload. Allows for assignment with deep copy behavior
+    /*!
+     * Similaringly to copy constructor, it ensures that newly created object will be a deep copy of template one
+     * @param assembly Reference to template assembly
+     * @return Value of new assembly
+     */
+    DrumAssemblyK& operator=(const DrumAssemblyK& assembly);
 };
 
 

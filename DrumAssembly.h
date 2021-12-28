@@ -6,7 +6,7 @@
 #define CPPPROJECT_DRUMASSEMBLY_H
 
 #include "Drum.h"
-#include "DrumAssemblyK.h"
+//#include "DrumAssemblyK.h"
 #include <tuple>
 
 //! Class holding information about standard 3+1 drum assembly
@@ -17,6 +17,7 @@
  * In this version of drum assembly, you cannot fit any drum marked with "narrow" flag
  */
 class DrumAssembly {
+private:
     Drum* right;
     Drum* middle;
     Drum* left;
@@ -25,9 +26,7 @@ class DrumAssembly {
     uint8_t refl_offset = 0;
 
     //Friend functions are declared, since they require some redesign, which in turn requires access to some private fields of this class
-    friend DrumAssemblyK::set_drums(const Drum &r, const Drum &m, const Drum &l, const Drum &refl);
-    friend DrumAssemblyK::set_reflector_drum(const Drum &drum);
-    char DrumAssemblyK::process_letter(char in);
+    friend class DrumAssemblyK;
 
 public:
     //! Default constructor - initializes all pointers with 0
@@ -44,8 +43,23 @@ public:
      */
     DrumAssembly(const Drum& r, const Drum& m, const Drum& l, const Drum& refl);
 
+    //! Copy constructor
+    /*!
+     * Assures that instantiating new object of the class with other one, actually results in proper memory allocation
+     * @param assembly Reference to assembly that shall be used as template
+     */
+    DrumAssembly(const DrumAssembly& assembly);
+
     //! Destructor. Deallocates memory for all existing drums, since all of them are allocated within the class
     ~DrumAssembly();
+
+    //! Equal operator overload. Allows for assignment with deep copy behavior
+    /*!
+     * Similaringly to copy constructor, it ensures that newly created object will be a deep copy of template one
+     * @param assembly Reference to template assembly
+     * @return Value of new assembly
+     */
+    DrumAssembly& operator=(const DrumAssembly& assembly);
 
     //! Safe setter for all drums
     /*!
@@ -120,6 +134,13 @@ public:
     //! This function returns tuple containing all the drums offsets right to left, including reflector drum
     std::tuple<uint8_t , uint8_t , uint8_t , uint8_t > get_offsets();
 
+    //!Helper static function
+    /*!
+     * Checks if number is ASCII alphabetic (A-Z) or (a-z)
+     * @param in Character to be checked
+     * @return True if is alphabetic, false otherwise
+     */
+    static bool is_alphabetic(char in);
 };
 
 

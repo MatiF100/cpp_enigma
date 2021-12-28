@@ -5,8 +5,6 @@
 #include "DrumAssemblyK.h"
 
 //Helper function - not exported
-bool is_alphabetic(char in);
-
 DrumAssemblyK::DrumAssemblyK() : DrumAssembly(){
     this->leftmost = nullptr;
     this->leftmost_offset = 0;
@@ -115,7 +113,7 @@ void DrumAssemblyK::set_leftmost_offset(uint8_t offset) {
 }
 
 char DrumAssemblyK::process_letter(char in) {
-    if (this->reflector == nullptr || this->left == nullptr || this->right == nullptr || this->middle == nullptr || this->leftmost == nullptr || !is_alphabetic(in))
+    if (this->reflector == nullptr || this->left == nullptr || this->right == nullptr || this->middle == nullptr || this->leftmost == nullptr || !DrumAssembly::is_alphabetic(in))
         return in;
 
     //In real machine, characters are processed AFTER the drums perform rotation
@@ -138,8 +136,61 @@ std::tuple<uint8_t, uint8_t, uint8_t, uint8_t, uint8_t> DrumAssemblyK::get_offse
     return {r, m, l, this->leftmost_offset, ref};
 }
 
-bool is_alphabetic(char in){
-    if (in >= 'A' && in <= 'Z' || in >= 'a' && in <= 'z')
-        return true;
-    return false;
+DrumAssemblyK::DrumAssemblyK(const DrumAssemblyK &assembly){
+
+    this->reflector = nullptr;
+    this->right = nullptr;
+    this->middle = nullptr;
+    this->left = nullptr;
+    this->leftmost = nullptr;
+
+    this->offset[0] = assembly.offset[0];
+    this->offset[1] = assembly.offset[1];
+    this->offset[2] = assembly.offset[2];
+
+    this->refl_offset = assembly.refl_offset;
+    this->leftmost_offset = assembly.leftmost_offset;
+
+    if (assembly.reflector != nullptr)
+        this->reflector = new Drum(*assembly.reflector);
+    if (assembly.right != nullptr)
+        this->right = new Drum(*assembly.right);
+    if (assembly.middle != nullptr)
+        this->middle = new Drum(*assembly.middle);
+    if (assembly.left != nullptr)
+        this->left = new Drum(*assembly.left);
+    if (assembly.leftmost != nullptr)
+        this->leftmost = new Drum(*assembly.leftmost);
 }
+
+
+DrumAssemblyK& DrumAssemblyK::operator=(const DrumAssemblyK& assembly){
+
+    this->reflector = nullptr;
+    this->right = nullptr;
+    this->middle = nullptr;
+    this->left = nullptr;
+    this->leftmost = nullptr;
+
+    this->offset[0] = assembly.offset[0];
+    this->offset[1] = assembly.offset[1];
+    this->offset[2] = assembly.offset[2];
+
+    this->refl_offset = assembly.refl_offset;
+    this->leftmost_offset = assembly.leftmost_offset;
+
+    if (assembly.reflector != nullptr)
+        this->reflector = new Drum(*assembly.reflector);
+    if (assembly.right != nullptr)
+        this->right = new Drum(*assembly.right);
+    if (assembly.middle != nullptr)
+        this->middle = new Drum(*assembly.middle);
+    if (assembly.left != nullptr)
+        this->left = new Drum(*assembly.left);
+    if (assembly.leftmost != nullptr)
+        this->leftmost = new Drum(*assembly.leftmost);
+
+    return *this;
+}
+
+

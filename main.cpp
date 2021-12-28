@@ -2,6 +2,7 @@
 #include "Drum.h"
 #include "DrumAssembly.h"
 #include "DrumAssemblyK.h"
+#include "Machine.h"
 
 int main() {
     std::cout << "Hello, World!" << std::endl;
@@ -15,8 +16,13 @@ int main() {
     std::string szyfrogram;
     DrumAssembly module(d1, d2, d3, rev);
     module.set_drums_offset(1,0,0, 0);
+    Machine wenigma;
+    wenigma.set_wehrenigma(module);
+    wenigma.detatch_drums();
+    wenigma.set_wehrenigma(module);
 
-    for (auto iter = wiad.cbegin(); iter != wiad.end(); ++iter){
+
+    /*for (auto iter = wiad.cbegin(); iter != wiad.end(); ++iter){
         szyfrogram += module.process_letter(*iter);
     }
     std::cout << szyfrogram << std::endl << "Po deszyfracji: ";
@@ -24,5 +30,12 @@ int main() {
     for (auto iter = szyfrogram.cbegin(); iter != szyfrogram.end(); ++iter){
         std::cout << module.process_letter(*iter);
     }
+     */
+    szyfrogram = wenigma.process_message(wiad);
+    std::cout << szyfrogram << std::endl << "Po deszyfracji: ";
+
+    wenigma.set_drum_offsets(0, 0, 0, 1);
+    szyfrogram = wenigma.process_message(szyfrogram);
+    std::cout << szyfrogram << std::endl ;
     return 0;
 }
