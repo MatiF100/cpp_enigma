@@ -21,13 +21,12 @@ class DrumAssemblyK : DrumAssembly {
     Drum* leftmost;
     uint8_t leftmost_offset;
 
-    /*! Overriden old set_drums and set_drumsoffset functions
-     * These functions are basically deprecated in this case, since they no longer allow to properly initialize assembly's structure
-     * And could create some undefined behavior if used incorrectly therefore they are redefined as "empty" and put under private scope
-     * This technically breaks inheritence principles but... This behavior is intended (and at least defined) in this case
+    /*! Overriden old set_drums and function
+     * This function is basically deprecated in this case, since it no longer allows to properly initialize assembly's structure
+     * And could create some undefined behavior if used incorrectly, so it is overriden with empty function
+     * Because of this, it is declared as private
      */
      bool set_drums(const Drum& r, const Drum& m, const Drum& l, const Drum& refl) override{}
-     void set_drums_offset(uint8_t left, uint8_t middle, uint8_t right, uint8_t reflector) override;
 public:
 
     //! Default constructor - initializes all pointers with 0
@@ -103,6 +102,9 @@ public:
      * @return Character after processing, or input character in case of failure
      */
     char process_letter(char in) override;
+
+    //! This function returns tuple containing all the drums offsets right to left, including reflector drum and thin additional drum
+    std::tuple<uint8_t, uint8_t, uint8_t, uint8_t, uint8_t> get_offset();
 };
 
 

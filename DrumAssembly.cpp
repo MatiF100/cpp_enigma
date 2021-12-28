@@ -3,6 +3,8 @@
 //
 
 #include "DrumAssembly.h"
+
+//Helper function - not exported
 bool is_alphabetic(char in);
 
 DrumAssembly::DrumAssembly(const Drum &r, const Drum &m, const Drum &l, const Drum &refl) {
@@ -29,20 +31,50 @@ DrumAssembly::~DrumAssembly() {
 
 bool DrumAssembly::set_drums(const Drum &r, const Drum &m, const Drum &l, const Drum &refl) {
     //Saving current state as backup
-    Drum c_left = *this->left;
-    Drum c_right = *this->right;
-    Drum c_mid = *this->middle;
-    Drum c_refl = *this->reflector;
-    if(this->set_left_drum(l) && this->set_right_drum(r) && this->set_middle_drum(m) && this->set_reflector_drum(refl))
-        return true;
+    Drum* c_left = this->left;
+    Drum* c_right = this->right;
+    Drum* c_mid = this->middle;
+    Drum* c_refl = this->reflector;
 
-    //Returning assembly to it's original form if setting has failed at any point
-    *this->left = c_left;
-    *this->right = c_right;
-    *this->middle = c_mid;
-    *this->reflector = c_refl;
+    //If setting fails we need to restore original drum's settigns
+    //We also need to ensure there are no memory leaks
+    if(!this->set_left_drum(l)) {
+        return false;
+    }
+    if (!this->set_right_drum(r)) {
 
-    return false;
+        delete this->left;
+
+        this->left = c_left;
+        return false;
+    }
+    if (!this->set_middle_drum(m)) {
+
+        delete this->left;
+        delete this->right;
+
+        this->left = c_left;
+        this->right = c_right;
+        return false;
+    }
+    if (!this->set_reflector_drum(refl)) {
+
+        delete this->left;
+        delete this->right;
+        delete this->middle;
+
+        this->left = c_left;
+        this->right = c_right;
+        this->middle = c_mid;
+        return false;
+    }
+    //Removing old drums, as there were new copies generated
+    delete c_refl;
+    delete c_mid;
+    delete c_right;
+    delete c_left;
+
+    return true;
 }
 
 
@@ -120,6 +152,10 @@ bool DrumAssembly::rotate_drums() {
     ++this->offset[0] %= 26;
 
     return true;
+}
+
+std::tuple<uint8_t, uint8_t, uint8_t, uint8_t> DrumAssembly::get_offsets() {
+    return {this->offset[0], this->offset[1], this->offset[2], this->refl_offset};
 }
 
 bool is_alphabetic(char in){

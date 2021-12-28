@@ -6,6 +6,8 @@
 #define CPPPROJECT_DRUMASSEMBLY_H
 
 #include "Drum.h"
+#include "DrumAssemblyK.h"
+#include <tuple>
 
 //! Class holding information about standard 3+1 drum assembly
 /*!
@@ -21,6 +23,11 @@ class DrumAssembly {
     Drum* reflector;
     uint8_t offset[3] = {0,0,0};
     uint8_t refl_offset = 0;
+
+    //Friend functions are declared, since they require some redesign, which in turn requires access to some private fields of this class
+    friend DrumAssemblyK::set_drums(const Drum &r, const Drum &m, const Drum &l, const Drum &refl);
+    friend DrumAssemblyK::set_reflector_drum(const Drum &drum);
+    char DrumAssemblyK::process_letter(char in);
 
 public:
     //! Default constructor - initializes all pointers with 0
@@ -97,7 +104,7 @@ public:
      * @param right Offset for the right drum
      * @param reflector Offset for the reflector drum
      */
-    virtual void set_drums_offset(uint8_t left, uint8_t middle, uint8_t right, uint8_t reflector);
+    void set_drums_offset(uint8_t left, uint8_t middle, uint8_t right, uint8_t reflector);
 
 
     //! This function reconfigures drums, by advancing the right-most by one position, and the rest as necessary
@@ -109,6 +116,9 @@ public:
      * @return True if rotation  was successful. False if could not get information about drum's notch location
      */
     bool rotate_drums();
+
+    //! This function returns tuple containing all the drums offsets right to left, including reflector drum
+    std::tuple<uint8_t , uint8_t , uint8_t , uint8_t > get_offsets();
 
 };
 
