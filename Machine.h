@@ -26,30 +26,33 @@ class Machine {
     std::unique_ptr<std::variant<DrumAssemblyK, DrumAssembly>> assembly;
     std::unique_ptr<Plugboard> plugboard;
 public:
+    //!Default constructor. Will create empty machine, without any modules attatched
+    Machine();
+
+    //! Basic constructor. It will create machine with ready drum assembly
+    /*!
+     * This constructor will initialize machine with Wehrenigma settings
+     * @param assem Reference to drum's assembly that should be inserted into machine
+     * @param pboard Pointer to the plugboard object
+     */
+    Machine(DrumAssembly& assem, Plugboard* pboard = nullptr);
+
     //! Sets enigma machine to use Kriegsmarine configuration
     /*!
      * It requires an Wehrmacht version of the drum assembly, which uses 4 rotors (3 of which are rotating while operation) and reversing drum
      * @param assembly Reference to template, Kriegsmarine drum assembly
      */
-    void set_kriegsenigma(DrumAssemblyK& assembly){
-        this->detatch_drums();
-        this->assembly = std::make_unique<std::variant<DrumAssemblyK, DrumAssembly>>(assembly);
-    }
+    void set_kriegsenigma(DrumAssemblyK& assembly);
 
     //! Sets enigma machine to use Wehrmacht configuration
     /*!
      * It requires an Wehrmacht version of the drum assembly, which uses 3 rotors and reversing drum
      * @param assembly  Reference to template, Wehrmacht drum assembly
      */
-    void set_wehrenigma(DrumAssembly& assembly){
-        this->detatch_drums();
-        this->assembly =  std::make_unique<std::variant<DrumAssemblyK, DrumAssembly>>(assembly);
-    }
+    void set_wehrenigma(DrumAssembly& assembly);
 
     //! Resets current drum assembly, and switches machine into non-operational/service state
-    void detatch_drums(){
-        this->assembly.reset();
-    }
+    void detatch_drums();
 
     //! Attatches plugboard module to the machine
     /*!
@@ -69,7 +72,7 @@ public:
      * @param msg String containing the message to be processed
      * @return string containing processed message
      */
-    std::string process_message(const std::string msg);
+    std::string process_message(const std::string& msg);
 
     //! Abstract function to configure drum's  setting no matter the configuration
     /*!

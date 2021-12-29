@@ -6,7 +6,6 @@
 #define CPPPROJECT_DRUMASSEMBLY_H
 
 #include "Drum.h"
-//#include "DrumAssemblyK.h"
 #include <tuple>
 
 //! Class holding information about standard 3+1 drum assembly

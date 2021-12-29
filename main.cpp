@@ -3,8 +3,9 @@
 #include "DrumAssembly.h"
 #include "DrumAssemblyK.h"
 #include "Machine.h"
-
-int main() {
+#include "Gui.h"
+wxIMPLEMENT_APP(Gui);
+/*int main() {
     std::cout << "Hello, World!" << std::endl;
     Drum d1("E,K,M,F,L,G,D,Q,V,Z,N,T,O,W,Y,H,X,U,S,P,A,I,B,R,C,J", 0, 'Q' - 'A');
     Drum d2("A,J,D,K,S,I,R,U,X,B,L,H,W,T,M,C,Q,G,Z,N,P,Y,F,V,O,E", 0, 'E' - 'A');
@@ -22,20 +23,14 @@ int main() {
     wenigma.set_wehrenigma(module);
 
 
-    /*for (auto iter = wiad.cbegin(); iter != wiad.end(); ++iter){
-        szyfrogram += module.process_letter(*iter);
-    }
-    std::cout << szyfrogram << std::endl << "Po deszyfracji: ";
-    module.set_drums_offset(1,0,0, 0);
-    for (auto iter = szyfrogram.cbegin(); iter != szyfrogram.end(); ++iter){
-        std::cout << module.process_letter(*iter);
-    }
-     */
     szyfrogram = wenigma.process_message(wiad);
     std::cout << szyfrogram << std::endl << "Po deszyfracji: ";
 
     wenigma.set_drum_offsets(0, 0, 0, 1);
     szyfrogram = wenigma.process_message(szyfrogram);
     std::cout << szyfrogram << std::endl ;
+
+    Gui gui;
     return 0;
 }
+*/
