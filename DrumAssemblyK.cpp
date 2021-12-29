@@ -131,7 +131,7 @@ char DrumAssemblyK::process_letter(char in) {
                                                             this->offset[2]), this->offset[1]), this->offset[0]);
 }
 
-std::tuple<uint8_t, uint8_t, uint8_t, uint8_t, uint8_t> DrumAssemblyK::get_offset() {
+std::tuple<uint8_t, uint8_t, uint8_t, uint8_t, uint8_t> DrumAssemblyK::get_offsets() {
     auto [r, m, l, ref] =  DrumAssembly::get_offsets();
     return {r, m, l, this->leftmost_offset, ref};
 }

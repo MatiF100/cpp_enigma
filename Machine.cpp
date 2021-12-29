@@ -62,3 +62,17 @@ Machine::Machine(DrumAssembly& assem, Plugboard* pboard) {
         this->plugboard = std::make_unique<Plugboard>(*pboard);
     this->assembly = std::make_unique<std::variant<DrumAssemblyK, DrumAssembly>>(assem);
 }
+
+std::tuple<uint8_t, uint8_t, uint8_t, uint8_t, uint8_t> Machine::get_offsets() {
+    if (std::holds_alternative<DrumAssembly>(*this->assembly)){
+        auto [r,m,l,ref] = std::get<DrumAssembly>(*this->assembly).get_offsets();
+        return std::make_tuple(r,m,l,511,ref);
+
+
+    }else if(std::holds_alternative<DrumAssemblyK>(*this->assembly)){
+        auto [r,m,l, lm,ref] = std::get<DrumAssemblyK>(*this->assembly).get_offsets();
+        return std::make_tuple(r,m,l,lm,ref);
+
+    }
+    return {511,511,511,511,511};
+}

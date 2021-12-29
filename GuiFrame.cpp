@@ -3,39 +3,27 @@
 //
 
 #include "GuiFrame.h"
+#include "GuiPanel.h"
 
-GuiFrame::GuiFrame()
-:wxFrame(NULL, wxID_ANY, "Hello World")
-{    wxMenu *menuFile = new wxMenu;
-    menuFile->Append(ID_Hello, "&Hello...\tCtrl-H",
-                     "Help string shown in status bar for this menu item");
-    menuFile->AppendSeparator();
-    menuFile->Append(wxID_EXIT);
+GuiFrame::GuiFrame(const wxString &title)
+: wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(1280, 720))
+{
 
-    wxMenu *menuHelp = new wxMenu;
-    menuHelp->Append(wxID_ABOUT);
 
-    wxMenuBar *menuBar = new wxMenuBar;
-    menuBar->Append(menuFile, "&File");
-    menuBar->Append(menuHelp, "&Help");
+    this->parent = new wxPanel(this, wxID_ANY);
 
-    SetMenuBar(menuBar);
-    CreateStatusBar();
-    SetStatusText("Welcome to wxWidgets!");
+    wxBoxSizer *hbox = new wxBoxSizer(wxHORIZONTAL);
 
-    Bind(wxEVT_MENU, &GuiFrame::OnHello, this, ID_Hello);
-    Bind(wxEVT_MENU, &GuiFrame::OnAbout, this, wxID_ABOUT);
-    Bind(wxEVT_MENU, &GuiFrame::OnExit, this, wxID_EXIT);
+    this->main_panel = new GuiPanel(this->parent);
+    this->logic = new GuiLogic(this->parent);
+
+    hbox->Add(this->main_panel, 1, wxEXPAND | wxALL, 5);
+    hbox->Add(this->logic, 1, wxEXPAND | wxALL, 5);
+
+    this->parent->SetSizer(hbox);
+    this->Centre();
+
+
 }
 
-void GuiFrame::OnHello(wxCommandEvent &event) {
-    wxLogMessage("Test message");
-}
 
-void GuiFrame::OnExit(wxCommandEvent &event) {
-    Close(true);
-}
-
-void GuiFrame::OnAbout(wxCommandEvent &event) {
-    wxMessageBox("Test msg", "Test caption", wxOK | wxICON_INFORMATION);
-}

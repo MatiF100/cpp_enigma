@@ -85,6 +85,13 @@ public:
      */
     void set_drum_offsets(uint8_t reflector = 0, uint8_t right = 0, uint8_t middle = 0, uint8_t left = 0, uint8_t leftmost = 0);
 
+    //!Abstract function to get current offset of drums
+    /*!
+     * This function will always return 5 element tuple with following offsets: right, middle, left, leftmost, reflector.
+     * In case of drum's non-existance, the value will be 511
+     * @return Tuple containing offsets of corresponding drums
+     */
+    std::tuple<uint8_t , uint8_t , uint8_t , uint8_t , uint8_t > get_offsets();
 };
 
 

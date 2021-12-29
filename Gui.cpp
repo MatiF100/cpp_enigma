@@ -6,7 +6,7 @@
 #include "GuiFrame.h"
 
 bool Gui::OnInit() {
-    GuiFrame *frame = new GuiFrame();
+    GuiFrame *frame = new GuiFrame(wxT("ENIGMA"));
     frame->Show(true);
     return true;
 

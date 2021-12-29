@@ -3,7 +3,7 @@ project(CPPProject)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(CPPProject main.cpp Drum.cpp Drum.h Plugboard.cpp Plugboard.h DrumAssembly.cpp DrumAssembly.h DrumAssemblyK.cpp DrumAssemblyK.h Machine.cpp Machine.h Gui.cpp Gui.h GuiFrame.cpp GuiFrame.h)
+add_executable(CPPProject main.cpp Drum.cpp Drum.h Plugboard.cpp Plugboard.h DrumAssembly.cpp DrumAssembly.h DrumAssemblyK.cpp DrumAssemblyK.h Machine.cpp Machine.h Gui.cpp Gui.h GuiPanel.cpp GuiPanel.h GuiFrame.cpp GuiFrame.h GuiLogic.cpp GuiLogic.h)
 
 include_directories("G:/wxWidgets-3.1.5/include")
 include_directories("G:/wxWidgets-3.1.5/cmake-build-debug/lib/wx/include/msw-unicode-3.1")

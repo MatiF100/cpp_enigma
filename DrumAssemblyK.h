@@ -112,7 +112,7 @@ public:
     char process_letter(char in) override;
 
     //! This function returns tuple containing all the drums offsets right to left, including reflector drum and thin additional drum
-    std::tuple<uint8_t, uint8_t, uint8_t, uint8_t, uint8_t> get_offset();
+    std::tuple<uint8_t, uint8_t, uint8_t, uint8_t, uint8_t> get_offsets();
 
 
     //! Equal operator overload. Allows for assignment with deep copy behavior
