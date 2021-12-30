@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include <fstream>
 
 #define DRUM_ALPHABET_LEN 26
 
@@ -73,6 +74,9 @@ public:
      * @param nl Value of notch location
      */
     Drum(std::vector<char>& alphabet, uint8_t ro, uint8_t nl, bool narrow = false);
+
+    //! FromFile constructor. It creates drum based on specially prepared file
+    Drum(std::fstream* handle, uint8_t ro = 0);
 
 
     //! Destructor, obvious bevavior

@@ -141,3 +141,35 @@ char Drum::process_character_backward(char c, uint8_t offset){
     return (char)(real_c_idx + 65 + capital * 32);
 }
 
+Drum::Drum(std::fstream* handle, uint8_t ro) {
+    std::string tmp;
+    char nl;
+    uint8_t narrow;
+    *handle >> this->name;
+    *handle >> tmp;
+    *handle >> nl;
+    *handle >> narrow;
+    std::vector<char> alphabet(tmp.begin(), tmp.end());
+
+    //Setting reflector settings by default
+    this->ring_offset = ro;
+    this->notch_location = nl;
+    this->reflector = true;
+    this->narrow = narrow ? true : false;
+
+    //std::vector should posses an implementation of copy constructor. Otherwise this might not work
+    this->outputs = alphabet;
+
+    //Check if the drum has reflector property (all cycles of length 2)
+    for(auto iter = this->outputs.begin(); iter<this->outputs.end(); ++iter){
+        if (process_character_forward(*iter, 0) != process_character_backward(*iter, 0)){
+
+            //Setting standard drum settins
+            this->reflector = false;
+
+            break;
+        }
+    }
+
+}
+
