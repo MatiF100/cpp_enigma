@@ -25,6 +25,7 @@
 class Machine {
     std::unique_ptr<std::variant<DrumAssemblyK, DrumAssembly>> assembly;
     std::unique_ptr<Plugboard> plugboard;
+    std::string buffer;
 public:
     //!Default constructor. Will create empty machine, without any modules attatched
     Machine();
@@ -92,6 +93,9 @@ public:
      * @return Tuple containing offsets of corresponding drums
      */
     std::tuple<uint8_t , uint8_t , uint8_t , uint8_t , uint8_t > get_offsets();
+
+    friend std::ostream& operator<<(std::ostream& os, const Machine& machine);
+    friend std::istream& operator>>(std::istream& is, Machine& machine);
 };
 
 

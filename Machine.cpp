@@ -76,3 +76,15 @@ std::tuple<uint8_t, uint8_t, uint8_t, uint8_t, uint8_t> Machine::get_offsets() {
     }
     return {511,511,511,511,511};
 }
+
+std::ostream& operator<<(std::ostream& os, const Machine& machine){
+    os << machine.buffer;
+    return os;
+}
+
+std::istream &operator>>(std::istream &is,Machine &machine) {
+    std::string tmp;
+    is >> tmp;
+    machine.buffer+=machine.process_message(tmp);
+    return is;
+}
