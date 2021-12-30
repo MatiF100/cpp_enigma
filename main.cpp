@@ -3,9 +3,7 @@
 #include "DrumAssembly.h"
 #include "DrumAssemblyK.h"
 #include "Machine.h"
-#include "Gui.h"
-wxIMPLEMENT_APP(Gui);
-/*int main() {
+int main() {
     std::cout << "Hello, World!" << std::endl;
     Drum d1("E,K,M,F,L,G,D,Q,V,Z,N,T,O,W,Y,H,X,U,S,P,A,I,B,R,C,J", 0, 'Q' - 'A');
     Drum d2("A,J,D,K,S,I,R,U,X,B,L,H,W,T,M,C,Q,G,Z,N,P,Y,F,V,O,E", 0, 'E' - 'A');
@@ -30,7 +28,5 @@ wxIMPLEMENT_APP(Gui);
     szyfrogram = wenigma.process_message(szyfrogram);
     std::cout << szyfrogram << std::endl ;
 
-    Gui gui;
     return 0;
 }
-*/
