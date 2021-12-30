@@ -94,6 +94,16 @@ public:
      */
     std::tuple<uint8_t , uint8_t , uint8_t , uint8_t , uint8_t > get_offsets();
 
+    //! Function returning variant of the enigma machine currently used
+    /*!
+     * Return codes:
+     * 0 - none or unknown variant
+     * 1 - Wehrmacht variant
+     * 2 - Kriegsmarine variant
+     * @return One of above codes
+     */
+    uint8_t get_variant() const;
+
     friend std::ostream& operator<<(std::ostream& os, const Machine& machine);
     friend std::istream& operator>>(std::istream& is, Machine& machine);
 };

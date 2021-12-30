@@ -10,6 +10,7 @@
 #include "ImGUI/imgui.h"
 #include "ImGUI/imgui_impl_glfw.h"
 #include "ImGUI/imgui_impl_opengl3.h"
+#include "ImGUI/imgui_stdlib.h"
 
 static void glfw_error_callback(int error, const char* description)
 {
@@ -71,6 +72,9 @@ int main() {
     bool show_input_window = false;
     bool show_output_window = false;
     bool show_file_window = false;
+    bool show_status_window = false;
+    bool show_setup_window = false;
+    std::string output = "Tu pojawi się twoja wiadomość";
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     // Main loop
@@ -104,6 +108,7 @@ int main() {
             ImGui::Checkbox("Drums Window", &show_drums_window);
             ImGui::Checkbox("Plugboard Window", &show_plugboard_window);
             ImGui::Checkbox("Input Window", &show_input_window);
+            ImGui::Checkbox("Status Window", &show_status_window);
 
             ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
             ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
@@ -122,7 +127,7 @@ int main() {
         {
             auto [r,m,l,lm,ref] = wenigma.get_offsets();
             int offsets[] = {r,m,l,lm,ref};
-            const char* values[] = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25"};
+            const char* values[] = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25", "26"};
             ImGui::Begin("Drums panel", &show_drums_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
             ImGui::Combo("Reflector drum", &offsets[4], values, IM_ARRAYSIZE(values));
             if(offsets[3]<26) {
@@ -131,17 +136,18 @@ int main() {
             ImGui::Combo("Left drum", &offsets[2], values, IM_ARRAYSIZE(values));
             ImGui::Combo("Middle drum", &offsets[1], values, IM_ARRAYSIZE(values));
             ImGui::Combo("Right drum", &offsets[0], values, IM_ARRAYSIZE(values));
-            if (ImGui::Button("Close Me"))
-                show_drums_window = false;
             ImGui::End();
-            wenigma.set_drum_offsets(ref, r, m, l, lm);
+            wenigma.set_drum_offsets(offsets[4], offsets[0], offsets[1], offsets[2], offsets[3]);
         }
         // Show plugboard configuration window
         if (show_plugboard_window){
             static Plugboard pboard;
             static bool pboard_attatched = false;
             static char lock;
-            ImGui::Begin("Plugboard");
+            static ImVec4 colors[26];
+            bool colored = false;
+            ImVec4 base_color = (ImVec4)ImColor();
+            ImGui::Begin("Plugboard", &show_plugboard_window);
 
             if(pboard_attatched){
                 if(ImGui::Button("Detatch")){
@@ -152,23 +158,37 @@ int main() {
                 if(ImGui::Button("Attatch"))
                     pboard_attatched = true;
             }
-
             for(int i = 0; i<26; i++){
 
+                colored = false;
                 char tmp[2] = "A";
                 tmp[0] += i;
 
                 if(i!=0 && i%13!=0)
                     ImGui::SameLine();
 
+                if(pboard.swap('A'+i) != 'A'+i){
+                    ImGui::PushID(i);
+                    ImGui::PushStyleColor(ImGuiCol_Button, base_color);
+                    colored = true;
+                }
+
                 if(ImGui::Button(tmp)){
-                    if(pboard.remove_plug('A'+i)) continue;
+                    if(pboard.remove_plug('A'+i)){
+                        ImGui::PopStyleColor(1);
+                        ImGui::PopID();
+                        continue;
+                    }
                     if (lock != 0){
-                        pboard.insert_plug(lock, 'A'+i);
+                        bool result = pboard.insert_plug(lock, (char)('A'+i));
                         lock = 0;
                     }else{
                         lock = 'A'+i;
                     }
+                }
+                if(colored) {
+                    ImGui::PopStyleColor(1);
+                    ImGui::PopID();
                 }
                 if (pboard_attatched) wenigma.attatch_plugboard(pboard);
             }
@@ -177,13 +197,40 @@ int main() {
         //Show input message window
         if (show_input_window){
             static std::string msg;
-            static ImGuiInputTextFlags flags = ImGuiInputTextFlags_AllowTabInput;
-            flags |= ImGuiInputTextFlags_CallbackResize;
-            ImGui::Begin("Input");
-                ImGui::InputTextMultiline('##input', "Wprowadź wiadomość tutaj...", IM_ARRAYSIZE(msg));
+            static ImGuiInputTextFlags flags_in = ImGuiInputTextFlags_AllowTabInput;
+            static ImGuiInputTextFlags flags_out = ImGuiInputTextFlags_AllowTabInput;
+            ImGui::Begin("Input", &show_input_window);
 
+            ImGui::InputTextMultiline("##input", &msg, flags_in);
+            ImGui::SameLine();
+            if(ImGui::Button("Przetwórz!")){
+                output = wenigma.process_message(msg);
+            }
 
+            flags_out |= ImGuiInputTextFlags_ReadOnly;
+            ImGui::InputTextMultiline("##output", &output, flags_out);
             ImGui::End();
+        }
+        if (show_status_window){
+            std::string variant;
+            switch(wenigma.get_variant()){
+                case 1:
+                    variant = "WEHR-ENIGMA";
+                    break;
+                case 2:
+                    variant = "KRIEGS-ENIGMA";
+                    break;
+                default:
+                    variant = "NONE";
+                    break;
+            }
+            ImGui::Begin("Status", &show_status_window);
+            ImGui::Text("Current variant: %s", variant.c_str());
+            ImGui::End();
+
+        }
+        if(show_setup_window){
+
         }
 
         // Rendering

@@ -140,3 +140,4 @@ char Drum::process_character_backward(char c, uint8_t offset){
     //As all calculations are already done, returning offset converted to number
     return (char)(real_c_idx + 65 + capital * 32);
 }
+

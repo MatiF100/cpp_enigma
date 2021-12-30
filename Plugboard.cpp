@@ -28,9 +28,14 @@ bool Plugboard::remove_plug(char target) {
 }
 
 char Plugboard::swap(char in) {
+    bool capital = true;
+    if (in > 'Z') {
+        in -= 32;
+        capital = false;
+    }
     auto i = this->substitutions.find(in);
     if(i != this->substitutions.end()){
-        return i->second;
+        return capital ? i->second : i->second + 32;
     }
-    return in;
+    return capital ? in : in + 32;
 }

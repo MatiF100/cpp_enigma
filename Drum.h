@@ -23,12 +23,16 @@ class Drum {
     uint8_t notch_location;
 
 
+
 public:
     //! Says if the drum is an reflector(true), or normal(false) drum
     bool reflector;
 
     //! Informs if the drum is of narrow kind. Required by Kriegsenigma
     bool narrow;
+
+    //! Drum's name. Optional but helps identify currently used drum
+    std::string name{};
 
     //! Contains offset of numbered ring from it's nominal position on the drum
     uint8_t ring_offset;
@@ -101,6 +105,7 @@ public:
     [[nodiscard]] uint8_t real_notch_location() const{
         return this->notch_location + this->ring_offset;
     }
+
 };
 
 

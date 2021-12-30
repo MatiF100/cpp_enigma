@@ -8,7 +8,9 @@ std::string Machine::process_message(const std::string& msg) {
     std::string cipher;
     if (std::holds_alternative<DrumAssembly>(*this->assembly)){
         for(auto i = msg.begin(); i < msg.end(); i++){
-            cipher += std::get<DrumAssembly>(*this->assembly).process_letter(*i);
+            char sub = this->plugboard ? this->plugboard->swap(*i) : *i;
+            sub = std::get<DrumAssembly>(*this->assembly).process_letter(sub);
+            cipher += this->plugboard ? this->plugboard->swap(sub) : sub;
         }
     }
     return cipher;
@@ -87,4 +89,14 @@ std::istream &operator>>(std::istream &is,Machine &machine) {
     is >> tmp;
     machine.buffer+=machine.process_message(tmp);
     return is;
+}
+
+uint8_t Machine::get_variant() const {
+    if (this->assembly == nullptr)
+        return 0;
+    if (std::holds_alternative<DrumAssembly>(*this->assembly))
+        return 1;
+    if (std::holds_alternative<DrumAssemblyK>(*this->assembly))
+        return 2;
+    return 0;
 }
