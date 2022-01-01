@@ -110,6 +110,12 @@ public:
         return this->notch_location + this->ring_offset;
     }
 
+    //! Output stream operator overload. Used mostly for file operations
+    friend std::ostream& operator<<(std::ostream& os, const Drum& drum);
+
+    //! Input stream operator overload. Used mostly for loading configuration from file
+    friend std::istream& operator>>(std::istream& is, Drum& drum);
+
 };
 
 

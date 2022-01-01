@@ -3,6 +3,8 @@
 //
 
 #include "Machine.h"
+#include "fstream"
+#include "sstream"
 
 std::string Machine::process_message(const std::string& msg) {
     std::string cipher;
@@ -67,7 +69,7 @@ Machine::Machine(DrumAssembly& assem, Plugboard* pboard) {
 
 std::tuple<uint8_t, uint8_t, uint8_t, uint8_t, uint8_t> Machine::get_offsets() {
     if (std::holds_alternative<DrumAssembly>(*this->assembly)){
-        auto [r,m,l,ref] = std::get<DrumAssembly>(*this->assembly).get_offsets();
+        auto [r,m,l,_lm,ref] = std::get<DrumAssembly>(*this->assembly).get_offsets();
         return std::make_tuple(r,m,l,511,ref);
 
 
@@ -99,4 +101,174 @@ uint8_t Machine::get_variant() const {
     if (std::holds_alternative<DrumAssemblyK>(*this->assembly))
         return 2;
     return 0;
+}
+
+bool Machine::save_config(std::string& filename) {
+
+    std::fstream target;
+    target.open(filename, std::ios_base::out);
+    if (!target.good())
+        return false;
+    if (this->assembly == nullptr)
+        return false;
+    if(std::holds_alternative<DrumAssembly>(*this->assembly)){
+        target << std::get<DrumAssembly>(*this->assembly).get_configuration();
+    }else if(std::holds_alternative<DrumAssemblyK>(*this->assembly)){
+        target << std::get<DrumAssemblyK>(*this->assembly).get_configuration();
+    }
+    for(int i=0; i<26; i++){
+        if(this->plugboard==nullptr)
+            target << (char)('A' + i);
+        else{
+            target << this->plugboard->swap('A' + i);
+        }
+    }
+    return true;
+}
+
+bool Machine::load_config(std::string& filename) {
+    std::fstream source;
+    int type;
+    std::string pboard;
+    source.open(filename, std::ios_base::in);
+    if (source.bad())
+        return false;
+
+    source >> type;
+    source.seekg(0);
+    if(type==1){
+        DrumAssembly* tmp = new DrumAssembly();
+        std::string line;
+        std::stringstream config;
+
+        //Type
+        std::getline(source, line);
+        config << line << std::endl;
+
+        //Drum 1
+        std::getline(source, line);
+        config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
+
+        //Drum 2
+        std::getline(source, line);
+        config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
+
+        //Drum 3
+        std::getline(source, line);
+        config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
+
+        //Reflector
+        std::getline(source, line);
+        config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
+
+        //Offsets
+        std::getline(source, line);
+        config << line << std::endl;
+        if (tmp->set_configuration_from_string(config.str())){
+            this->assembly.reset();
+            this->assembly = std::make_unique<std::variant<DrumAssemblyK, DrumAssembly>>(*tmp);
+        }
+        delete tmp;
+
+    }else if(type == 2){
+
+        DrumAssemblyK* tmp = new DrumAssemblyK();
+        std::string line;
+        std::stringstream config;
+
+        //Type
+        std::getline(source, line);
+        config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
+
+        //Drum 1
+        std::getline(source, line);
+        config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
+
+        //Drum 2
+        std::getline(source, line);
+        config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
+
+        //Drum 3
+        std::getline(source, line);
+        config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
+
+        //Drum 4
+        std::getline(source, line);
+        config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
+
+        //Reflector
+        std::getline(source, line);
+        config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
+
+        //Offsets
+        std::getline(source, line);
+        config << line << std::endl;
+        if (tmp->set_configuration_from_string(config.str())){
+            this->assembly.reset();
+            this->assembly = std::make_unique<std::variant<DrumAssemblyK, DrumAssembly>>(*tmp);
+        }
+        delete tmp;
+    }else
+        return false;
+
+    //Plugboard
+    std::getline(source, pboard);
+    if(pboard.length() != 26)
+        return false;
+    source >> pboard;
+    this->plugboard.reset();
+    this->plugboard = std::make_unique<Plugboard>();
+    for(int i = 0; i<26; i++){
+        if ('A'+i != pboard[i])
+            this->plugboard->insert_plug('A' + i, pboard[i]);
+    }
+
+    return true;
+}
+
+Plugboard *Machine::get_plugboard() {
+    if (this->plugboard == nullptr)
+        return nullptr;
+    Plugboard* helper_ptr = new Plugboard(*this->plugboard);
+    return helper_ptr;
 }

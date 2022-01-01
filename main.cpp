@@ -19,8 +19,8 @@ static void glfw_error_callback(int error, const char* description)
 
 int main() {
 
-    Drum d1("E,K,M,F,L,G,D,Q,V,Z,N,T,O,W,Y,H,X,U,S,P,A,I,B,R,C,J", 0, 'Q' - 'A');
-    Drum d2("A,J,D,K,S,I,R,U,X,B,L,H,W,T,M,C,Q,G,Z,N,P,Y,F,V,O,E", 0, 'E' - 'A');
+    Drum d2("E,K,M,F,L,G,D,Q,V,Z,N,T,O,W,Y,H,X,U,S,P,A,I,B,R,C,J", 0, 'Q' - 'A');
+    Drum d1("A,J,D,K,S,I,R,U,X,B,L,H,W,T,M,C,Q,G,Z,N,P,Y,F,V,O,E", 0, 'E' - 'A');
     Drum d3("B,D,F,H,J,L,C,P,R,T,X,V,Z,N,Y,E,I,W,G,A,K,M,U,S,Q,O", 0, 'V' - 'A');
     Drum rev("Y,R,U,H,Q,S,L,D,P,X,N,G,O,K,M,I,E,B,F,Z,C,W,V,J,A,T", 0, 0);;
 
@@ -66,6 +66,7 @@ int main() {
     ImGui_ImplOpenGL3_Init(glsl_version);
 
     // Our state
+    static Plugboard* pboard = new Plugboard();
     bool show_demo_window = true;
     bool show_drums_window = false;
     bool show_plugboard_window = false;
@@ -109,6 +110,7 @@ int main() {
             ImGui::Checkbox("Plugboard Window", &show_plugboard_window);
             ImGui::Checkbox("Input Window", &show_input_window);
             ImGui::Checkbox("Status Window", &show_status_window);
+            ImGui::Checkbox("Setup Window", &show_setup_window);
 
             ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
             ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
@@ -141,8 +143,14 @@ int main() {
         }
         // Show plugboard configuration window
         if (show_plugboard_window){
-            static Plugboard pboard;
             static bool pboard_attatched = false;
+            if (wenigma.get_plugboard() != nullptr){
+                delete pboard;
+                pboard = wenigma.get_plugboard();
+                pboard_attatched = true;
+            }else{
+                pboard_attatched = false;
+            }
             static char lock;
             static ImVec4 colors[26];
             bool colored = false;
@@ -167,20 +175,20 @@ int main() {
                 if(i!=0 && i%13!=0)
                     ImGui::SameLine();
 
-                if(pboard.swap('A'+i) != 'A'+i){
+                if(pboard->swap('A'+i) != 'A'+i){
                     ImGui::PushID(i);
                     ImGui::PushStyleColor(ImGuiCol_Button, base_color);
                     colored = true;
                 }
 
                 if(ImGui::Button(tmp)){
-                    if(pboard.remove_plug('A'+i)){
+                    if(pboard->remove_plug('A'+i)){
                         ImGui::PopStyleColor(1);
                         ImGui::PopID();
                         continue;
                     }
                     if (lock != 0){
-                        bool result = pboard.insert_plug(lock, (char)('A'+i));
+                        bool result = pboard->insert_plug(lock, (char)('A'+i));
                         lock = 0;
                     }else{
                         lock = 'A'+i;
@@ -190,7 +198,7 @@ int main() {
                     ImGui::PopStyleColor(1);
                     ImGui::PopID();
                 }
-                if (pboard_attatched) wenigma.attatch_plugboard(pboard);
+                if (pboard_attatched) wenigma.attatch_plugboard(*pboard);
             }
             ImGui::End();
         }
@@ -230,7 +238,20 @@ int main() {
 
         }
         if(show_setup_window){
+            static std::string ifile, ofile;
+            ImGui::Begin("Configuration", &show_setup_window);
+            ImGui::InputText("##iconfigfile", &ifile);
+            ImGui::SameLine();
+            if(ImGui::Button("Załaduj z pliku!")){
+               if(wenigma.load_config(ifile));
+            }
 
+            ImGui::InputText("##oconfigfile", &ofile);
+            ImGui::SameLine();
+            if(ImGui::Button("Zapisz do pliku!")){
+                if(wenigma.save_config(ofile));
+            }
+            ImGui::End();
         }
 
         // Rendering

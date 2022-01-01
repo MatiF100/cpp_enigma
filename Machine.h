@@ -102,10 +102,30 @@ public:
      * 2 - Kriegsmarine variant
      * @return One of above codes
      */
-    uint8_t get_variant() const;
+    [[nodiscard]] uint8_t get_variant() const;
 
+    //! Function returning current plugboard setting
+    /*!
+     *
+     * @return Pointer to copy of currently attached plugboard
+     */
+    Plugboard* get_plugboard();
+
+    //!Output stream operator overload. Used for message processing
     friend std::ostream& operator<<(std::ostream& os, const Machine& machine);
+
+    //! Input stream operator overload. Used for message processing
     friend std::istream& operator>>(std::istream& is, Machine& machine);
+
+    //! Function saving current configuration to file, with proprietary (and very simple) format
+    /*!
+     * This function will save current state of plugboard, selected drums and their current offsets
+     * @param filename name of the file for the config to be saved into
+     * @return True if operation was successful
+     */
+    [[nodiscard]] bool save_config(std::string &filename);
+
+    [[nodiscard]] bool load_config(std::string &filename);
 };
 
 

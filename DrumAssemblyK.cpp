@@ -3,6 +3,7 @@
 //
 
 #include "DrumAssemblyK.h"
+#include "sstream"
 
 //Helper function - not exported
 DrumAssemblyK::DrumAssemblyK() : DrumAssembly(){
@@ -132,11 +133,11 @@ char DrumAssemblyK::process_letter(char in) {
 }
 
 std::tuple<uint8_t, uint8_t, uint8_t, uint8_t, uint8_t> DrumAssemblyK::get_offsets() {
-    auto [r, m, l, ref] =  DrumAssembly::get_offsets();
+    auto [r, m, l, _lm, ref] =  DrumAssembly::get_offsets();
     return {r, m, l, this->leftmost_offset, ref};
 }
 
-DrumAssemblyK::DrumAssemblyK(const DrumAssemblyK &assembly){
+DrumAssemblyK::DrumAssemblyK(const DrumAssemblyK &assembly) : DrumAssembly(assembly) {
 
     this->reflector = nullptr;
     this->right = nullptr;
@@ -191,6 +192,53 @@ DrumAssemblyK& DrumAssemblyK::operator=(const DrumAssemblyK& assembly){
         this->leftmost = new Drum(*assembly.leftmost);
 
     return *this;
+}
+
+std::string DrumAssemblyK::get_configuration() {
+    std::stringstream config;
+    config << "2" << *this->right << *this->middle << *this->left << *this->leftmost << *this->reflector << std::endl;
+    config << (unsigned int)this->offset[0] << " " << (unsigned int)this->offset[1] << " " << (unsigned int)this->offset[2] << " " <<  (unsigned int)this->leftmost_offset << " " << (unsigned int)this->refl_offset << std::endl;
+    return config.str();
+}
+
+bool DrumAssemblyK::set_configuration_from_string(std::string cfg) {
+
+    std::stringstream config(cfg);
+    int type;
+    config >> type;
+    //This means we are trying to load wrong configuration
+    if (type != 1)
+        return false;
+    if (this->right == nullptr)
+        this->right = new Drum();
+    config >> *this->right;
+
+    if (this->middle == nullptr)
+        this->middle = new Drum();
+    config >> *this->middle;
+
+    if (this->left == nullptr)
+        this->left = new Drum();
+    config >> *this->left;
+
+    if (this->leftmost == nullptr)
+        this->leftmost = new Drum();
+    config >> *this->leftmost;
+
+    if (this->reflector == nullptr)
+        this->reflector = new Drum();
+    config >> *this->reflector;
+
+    unsigned int r,m,l, lm,ref;
+    config >> r >> m >> l >> lm >> ref;
+    this->offset[0] = r;
+    this->offset[1] = m;
+    this->offset[2] = l;
+    this->leftmost_offset = lm;
+    this->refl_offset = ref;
+
+    return true;
+
 }
 
 

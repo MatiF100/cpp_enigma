@@ -131,7 +131,7 @@ public:
     bool rotate_drums();
 
     //! This function returns tuple containing all the drums offsets right to left, including reflector drum
-    std::tuple<uint8_t , uint8_t , uint8_t , uint8_t > get_offsets();
+    virtual std::tuple<uint8_t , uint8_t , uint8_t, uint8_t , uint8_t > get_offsets();
 
     //!Helper static function
     /*!
@@ -140,6 +140,20 @@ public:
      * @return True if is alphabetic, false otherwise
      */
     static bool is_alphabetic(char in);
+
+    /*! Helper function for getting and setting the state of drum assembly.
+     * It serializes current machine's state so it can be written into file or presented in other way
+     * @return String with current state of drum assembly
+     */
+    virtual std::string get_configuration();
+
+    //! String setter for drum assembly configuration
+    /*!
+     * It configures drums assembly based on given string
+     * @param cfg String with specific format, holding saved information about drum's assembly
+     * @return True if configuration setting was successful, false if it had failed
+     */
+    virtual bool set_configuration_from_string(std::string cfg);
 };
 
 

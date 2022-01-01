@@ -112,7 +112,7 @@ public:
     char process_letter(char in) override;
 
     //! This function returns tuple containing all the drums offsets right to left, including reflector drum and thin additional drum
-    std::tuple<uint8_t, uint8_t, uint8_t, uint8_t, uint8_t> get_offsets();
+    std::tuple<uint8_t, uint8_t, uint8_t, uint8_t, uint8_t> get_offsets() override;
 
 
     //! Equal operator overload. Allows for assignment with deep copy behavior
@@ -122,6 +122,20 @@ public:
      * @return Value of new assembly
      */
     DrumAssemblyK& operator=(const DrumAssemblyK& assembly);
+
+    /*! Helper function for getting and setting the state of drum assembly.
+     * It serializes current machine's state so it can be written into file or presented in other way
+     * @return String with current state of drum assembly
+     */
+    std::string get_configuration() override;
+
+    //! String setter for drum assembly configuration
+    /*!
+     * It configures drums assembly based on given string
+     * @param cfg String with specific format, holding saved information about drum's assembly
+     * @return True if configuration setting was successful, false if it had failed
+     */
+    bool set_configuration_from_string(std::string cfg) override;
 };
 
 

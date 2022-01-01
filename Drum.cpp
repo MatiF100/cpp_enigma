@@ -170,6 +170,28 @@ Drum::Drum(std::fstream* handle, uint8_t ro) {
             break;
         }
     }
+}
 
+std::ostream &operator<<(std::ostream &os, const Drum &drum) {
+    os << drum.name << std::endl;
+    for(auto i = drum.outputs.begin(); i<drum.outputs.end(); i++ ){
+        os << *i;
+    }
+    os << std::endl << (char)(drum.notch_location + 'A') << std::endl << (unsigned int)drum.narrow;
+    return os;
+}
+
+std::istream &operator>>(std::istream &is, Drum &drum) {
+    std::string tmp;
+    char nl_tmp;
+    int nr_tmp;
+    is >> tmp >> nl_tmp >> nr_tmp;
+    drum.outputs.resize(26);
+    for(int i = 0; i < tmp.length(); i++){
+        drum.outputs[i] = tmp[i];
+    }
+    drum.notch_location = nl_tmp - 'A';
+    drum.narrow = nr_tmp ? true : false;
+    return is;
 }
 

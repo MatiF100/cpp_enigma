@@ -3,6 +3,9 @@
 //
 
 #include "DrumAssembly.h"
+#include "string"
+#include "sstream"
+#include "iostream"
 
 
 
@@ -153,8 +156,8 @@ bool DrumAssembly::rotate_drums() {
     return true;
 }
 
-std::tuple<uint8_t, uint8_t, uint8_t, uint8_t> DrumAssembly::get_offsets() {
-    return {this->offset[0], this->offset[1], this->offset[2], this->refl_offset};
+std::tuple<uint8_t, uint8_t, uint8_t, uint8_t, uint8_t> DrumAssembly::get_offsets() {
+    return {this->offset[0], this->offset[1], this->offset[2],0, this->refl_offset};
 }
 
 bool DrumAssembly::is_alphabetic(char in) {
@@ -209,5 +212,43 @@ DrumAssembly& DrumAssembly::operator=(const DrumAssembly &assembly) {
         this->left = new Drum(*assembly.left);
 
     return *this;
+}
+
+std::string DrumAssembly::get_configuration() {
+    std::stringstream config;
+    config << "1" << *this->right << *this->middle << *this->left << *this->reflector << std::endl;
+    config << (unsigned int)this->offset[0] << " " << (unsigned int)this->offset[1] << " " << (unsigned int)this->offset[2] << " " << (unsigned int)this->refl_offset << std::endl;
+    return config.str();
+}
+
+bool DrumAssembly::set_configuration_from_string(std::string cfg) {
+    std::stringstream config(cfg);
+    int type;
+    config >> type;
+    //This means we are trying to load wrong configuration
+    if (type != 1)
+        return false;
+    if (this->right == nullptr)
+        this->right = new Drum();
+    config >> *this->right;
+
+    if (this->middle == nullptr)
+        this->middle = new Drum();
+    config >> *this->middle;
+
+    if (this->left == nullptr)
+        this->left = new Drum();
+    config >> *this->left;
+
+    if (this->reflector == nullptr)
+        this->reflector = new Drum();
+    config >> *this->reflector;
+    unsigned int r,m,l,ref;
+    config >> r >> m >> l >> ref;
+    this->offset[0] = r;
+    this->offset[1] = m;
+    this->offset[2] = l;
+    this->refl_offset = ref;
+    return true;
 }
 
