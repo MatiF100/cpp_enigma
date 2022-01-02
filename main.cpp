@@ -57,6 +57,16 @@ int main() {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImVector<ImWchar> ranges;
+    ImFontGlyphRangesBuilder builder;
+    builder.AddText("ęóąśłżźńĘÓĄŚŁŻŹŃ");
+    builder.AddRanges(io.Fonts->GetGlyphRangesDefault());
+    builder.BuildRanges(&ranges);
+
+    io.Fonts->AddFontFromFileTTF("lato.ttf", 16, NULL, ranges.Data);
+    io.Fonts->Build();
+
+
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
@@ -124,6 +134,7 @@ int main() {
             static std::vector<Drum> thin_reflectors;
             static int variant;
             static int indexes[5]{};
+            static int ring_offsets[5]{};
             ImGui::Begin("Assembly");
             if(!drums.is_open() && standard_drums.empty() && reflectors.empty() && thin_drums.empty() && thin_reflectors.empty()){
                 drums.open("drums.cfg", std::ios_base::in);
@@ -153,6 +164,17 @@ int main() {
                 ImGui::RadioButton("Wehrmacht confifuration", &variant, 1);
                 ImGui::RadioButton("Kriegsmarine configuration", &variant, 2);
 
+                const char *values[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15",
+                                        "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26"};
+
+                ImGui::Text("First column is for setting ring offset of a drum");
+                ImGui::Text("Second column is for selection of the acual drum by it's name");
+                ImGui::PushItemWidth(80);
+
+                ImGui::SetNextItemWidth(50);
+                ImGui::Combo("##rok1", &ring_offsets[0], values, IM_ARRAYSIZE(values));
+                ImGui::SameLine();
+
                 if (ImGui::BeginCombo("<-- Right drum", standard_drums[indexes[0]].name.c_str())) {
                     for (int n = 0; n < standard_drums.size(); n++) {
                         const bool is_selected = (indexes[0] == n);
@@ -164,6 +186,11 @@ int main() {
                     }
                     ImGui::EndCombo();
                 }
+
+                ImGui::SetNextItemWidth(50);
+                ImGui::Combo("##rok2", &ring_offsets[1], values, IM_ARRAYSIZE(values));
+                ImGui::SameLine();
+
                 if (ImGui::BeginCombo("<-- Middle drum", standard_drums[indexes[1]].name.c_str())) {
                     for (int n = 0; n < standard_drums.size(); n++) {
                         const bool is_selected = (indexes[1] == n);
@@ -175,6 +202,11 @@ int main() {
                     }
                     ImGui::EndCombo();
                 }
+
+                ImGui::SetNextItemWidth(50);
+                ImGui::Combo("##rok3", &ring_offsets[2], values, IM_ARRAYSIZE(values));
+                ImGui::SameLine();
+
                 if (ImGui::BeginCombo("<-- Left drum", standard_drums[indexes[2]].name.c_str())) {
                     for (int n = 0; n < standard_drums.size(); n++) {
                         const bool is_selected = (indexes[2] == n);
@@ -186,6 +218,11 @@ int main() {
                     }
                     ImGui::EndCombo();
                 }
+
+                ImGui::SetNextItemWidth(50);
+                ImGui::Combo("##rok4", &ring_offsets[3], values, IM_ARRAYSIZE(values));
+                ImGui::SameLine();
+
                 if (ImGui::BeginCombo("<-- Thin, leftmost drum", thin_drums[indexes[3]].name.c_str())) {
                     for (int n = 0; n < thin_drums.size(); n++) {
                         const bool is_selected = (indexes[3] == n);
@@ -197,6 +234,11 @@ int main() {
                     }
                     ImGui::EndCombo();
                 }
+
+                ImGui::SetNextItemWidth(50);
+                ImGui::Combo("##rok5", &ring_offsets[4], values, IM_ARRAYSIZE(values));
+                ImGui::SameLine();
+
                 if (ImGui::BeginCombo("<-- Reflector", thin_reflectors[indexes[4]].name.c_str())) {
                     for (int n = 0; n < thin_reflectors.size(); n++) {
                         const bool is_selected = (indexes[4] == n);
@@ -208,10 +250,22 @@ int main() {
                     }
                     ImGui::EndCombo();
                 }
+                ImGui::PopItemWidth();
                 if (ImGui::Button("Set configuration")) {
-                    DrumAssemblyK assembly_module(standard_drums[indexes[0]], standard_drums[indexes[1]],
-                                                  standard_drums[indexes[2]], thin_drums[indexes[3]],
-                                                  thin_reflectors[indexes[4]]);
+
+                    Drum& r = standard_drums[indexes[0]];
+                    Drum& m = standard_drums[indexes[1]];
+                    Drum& l = standard_drums[indexes[2]];
+                    Drum& lm = thin_drums[indexes[3]];
+                    Drum& ref = thin_reflectors[indexes[4]];
+
+                    r.set_ring_offset(ring_offsets[0]);
+                    m.set_ring_offset(ring_offsets[1]);
+                    l.set_ring_offset(ring_offsets[2]);
+                    lm.set_ring_offset(ring_offsets[3]);
+                    ref.set_ring_offset(ring_offsets[4]);
+
+                    DrumAssemblyK assembly_module(r,m,l,lm,ref);
                     enigma = new Machine(assembly_module);
                     standard_drums.clear();
                     reflectors.clear();
@@ -226,6 +280,18 @@ int main() {
                 ImGui::RadioButton("Wehrmacht confifuration", &variant, 1);
                 ImGui::RadioButton("Kriegsmarine configuration", &variant, 2);
 
+                const char *values[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15",
+                                        "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26"};
+
+                ImGui::Text("First column is for setting ring offset of a drum");
+                ImGui::Text("Second column is for selection of the acual drum by it's name");
+
+                ImGui::PushItemWidth(80);
+
+                ImGui::SetNextItemWidth(50);
+                ImGui::Combo("##ro1", &ring_offsets[0], values, IM_ARRAYSIZE(values));
+                ImGui::SameLine();
+
                 if(ImGui::BeginCombo("<-- Right drum", standard_drums[indexes[0]].name.c_str())){
                     for (int n = 0; n<standard_drums.size(); n++){
                         const bool is_selected = (indexes[0] == n);
@@ -237,6 +303,11 @@ int main() {
                     }
                     ImGui::EndCombo();
                 }
+
+                ImGui::SetNextItemWidth(50);
+                ImGui::Combo("##ro2", &ring_offsets[1], values, IM_ARRAYSIZE(values));
+                ImGui::SameLine();
+
                 if(ImGui::BeginCombo("<-- Middle drum", standard_drums[indexes[1]].name.c_str())){
                     for (int n = 0; n<standard_drums.size(); n++){
                         const bool is_selected = (indexes[1] == n);
@@ -248,6 +319,11 @@ int main() {
                     }
                     ImGui::EndCombo();
                 }
+
+                ImGui::SetNextItemWidth(50);
+                ImGui::Combo("##ro3", &ring_offsets[2], values, IM_ARRAYSIZE(values));
+                ImGui::SameLine();
+
                 if(ImGui::BeginCombo("<-- Left drum", standard_drums[indexes[2]].name.c_str())){
                     for (int n = 0; n<standard_drums.size(); n++){
                         const bool is_selected = (indexes[2] == n);
@@ -259,6 +335,11 @@ int main() {
                     }
                     ImGui::EndCombo();
                 }
+
+                ImGui::SetNextItemWidth(50);
+                ImGui::Combo("##ro4", &ring_offsets[4], values, IM_ARRAYSIZE(values));
+                ImGui::SameLine();
+
                 if(ImGui::BeginCombo("<-- Reflector", reflectors[indexes[4]].name.c_str())){
                     for (int n = 0; n<reflectors.size(); n++){
                         const bool is_selected = (indexes[4] == n);
@@ -270,8 +351,22 @@ int main() {
                     }
                     ImGui::EndCombo();
                 }
+
+                ImGui::PopItemWidth();
+
                 if(ImGui::Button("Set configuration")){
-                    DrumAssembly assembly_module(standard_drums[indexes[0]], standard_drums[indexes[1]], standard_drums[indexes[2]], reflectors[indexes[4]]);
+                    Drum& r = standard_drums[indexes[0]];
+                    Drum& m = standard_drums[indexes[1]];
+                    Drum& l = standard_drums[indexes[2]];
+                    Drum& ref = reflectors[indexes[4]];
+
+                    r.set_ring_offset(ring_offsets[0]);
+                    m.set_ring_offset(ring_offsets[1]);
+                    l.set_ring_offset(ring_offsets[2]);
+                    ref.set_ring_offset(ring_offsets[4]);
+
+                    DrumAssembly assembly_module(r,m,l,ref);
+
                     enigma = new Machine(assembly_module);
                     standard_drums.clear();
                     reflectors.clear();
