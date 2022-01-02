@@ -11,7 +11,6 @@
 #include "ImGUI/imgui_impl_glfw.h"
 #include "ImGUI/imgui_impl_opengl3.h"
 #include "ImGUI/imgui_stdlib.h"
-#include <fstream>
 
 static void glfw_error_callback(int error, const char* description)
 {
@@ -57,14 +56,20 @@ int main() {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
-    ImVector<ImWchar> ranges;
-    ImFontGlyphRangesBuilder builder;
-    builder.AddText("ęóąśłżźńĘÓĄŚŁŻŹŃ");
-    builder.AddRanges(io.Fonts->GetGlyphRangesDefault());
-    builder.BuildRanges(&ranges);
 
-    io.Fonts->AddFontFromFileTTF("lato.ttf", 16, NULL, ranges.Data);
-    io.Fonts->Build();
+    std::fstream dummy;
+    dummy.open("lato.ttf", std::ios_base::in | std::ios_base::binary);
+    if (dummy.good()) {
+        dummy.close();
+        ImVector<ImWchar> ranges;
+        ImFontGlyphRangesBuilder builder;
+        builder.AddText("ęóąśłżźńĘÓĄŚŁŻŹŃ");
+        builder.AddRanges(io.Fonts->GetGlyphRangesDefault());
+        builder.BuildRanges(&ranges);
+
+        io.Fonts->AddFontFromFileTTF("lato.ttf", 16, NULL, ranges.Data);
+        io.Fonts->Build();
+    }
 
 
 
