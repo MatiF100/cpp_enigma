@@ -31,7 +31,7 @@ void Machine::set_drum_offsets(uint8_t reflector, uint8_t right, uint8_t middle,
         auto& my_asm = std::get<DrumAssembly>(*this->assembly);
         my_asm.set_drums_offset(left, middle, right, reflector);
     }else if(std::holds_alternative<DrumAssemblyK>(*this->assembly)){
-        DrumAssemblyK my_asm = std::get<DrumAssemblyK>(*this->assembly);
+        auto& my_asm = std::get<DrumAssemblyK>(*this->assembly);
         my_asm.set_drums_offset(leftmost, left, middle, right, reflector);
     }
 }

@@ -63,7 +63,7 @@ int main() {
         dummy.close();
         ImVector<ImWchar> ranges;
         ImFontGlyphRangesBuilder builder;
-        builder.AddText("ęóąśłżźńĘÓĄŚŁŻŹŃ");
+        builder.AddText("ęóąśłżźćńĘÓĄŚŁŻŹŃĆ");
         builder.AddRanges(io.Fonts->GetGlyphRangesDefault());
         builder.BuildRanges(&ranges);
 
