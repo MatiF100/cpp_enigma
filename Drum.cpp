@@ -20,6 +20,7 @@ Drum::Drum(const Drum &templ) {
     this->notch_location = templ.notch_location;
     this->reflector = templ.reflector;
     this->narrow = templ.narrow;
+    this->name = templ.name;
 }
 
 //Calling other constructor with partially parsed values - example of initialization list
@@ -183,6 +184,7 @@ std::ostream &operator<<(std::ostream &os, const Drum &drum) {
 
 std::istream &operator>>(std::istream &is, Drum &drum) {
     std::string tmp;
+    drum.reflector = true;
     char nl_tmp;
     int nr_tmp;
     is >> tmp >> nl_tmp >> nr_tmp;
@@ -191,7 +193,20 @@ std::istream &operator>>(std::istream &is, Drum &drum) {
         drum.outputs[i] = tmp[i];
     }
     drum.notch_location = nl_tmp - 'A';
-    drum.narrow = nr_tmp ? true : false;
+    drum.narrow = nr_tmp == 1 ? true : false;
+
+    for(auto iter = drum.outputs.begin(); iter<drum.outputs.end(); ++iter){
+        if (drum.process_character_forward(*iter, 0) != drum.process_character_backward(*iter, 0)){
+            //Setting standard drum settins
+            drum.reflector = false;
+            break;
+        }
+    }
+
     return is;
+}
+
+void Drum::set_ring_offset(uint8_t offset) {
+    this->ring_offset = offset % 26;
 }
 

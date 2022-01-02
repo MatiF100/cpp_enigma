@@ -110,6 +110,14 @@ public:
         return this->notch_location + this->ring_offset;
     }
 
+
+    //!Function used to set ring's offset while preparing drum for usage
+    /*!
+     *
+     * @param offset Offset to be set onto the ring
+     */
+    void set_ring_offset(uint8_t offset);
+
     //! Output stream operator overload. Used mostly for file operations
     friend std::ostream& operator<<(std::ostream& os, const Drum& drum);
 

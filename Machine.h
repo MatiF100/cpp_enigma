@@ -30,13 +30,21 @@ public:
     //!Default constructor. Will create empty machine, without any modules attatched
     Machine();
 
-    //! Basic constructor. It will create machine with ready drum assembly
+    //! Basic constructor (Wehrmaht). It will create machine with ready drum assembly
     /*!
      * This constructor will initialize machine with Wehrenigma settings
      * @param assem Reference to drum's assembly that should be inserted into machine
      * @param pboard Pointer to the plugboard object
      */
     Machine(DrumAssembly& assem, Plugboard* pboard = nullptr);
+
+    //! Basic constructor (Kriegsmarine). It will create machine with ready drum assembly
+    /*!
+     * This constructor will initialize machine with Wehrenigma settings
+     * @param assem Reference to drum's assembly that should be inserted into machine
+     * @param pboard Pointer to the plugboard object
+     */
+    Machine(DrumAssemblyK& assem, Plugboard* pboard = nullptr);
 
     //! Sets enigma machine to use Kriegsmarine configuration
     /*!
