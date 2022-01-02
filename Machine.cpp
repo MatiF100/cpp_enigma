@@ -14,6 +14,12 @@ std::string Machine::process_message(const std::string& msg) {
             sub = std::get<DrumAssembly>(*this->assembly).process_letter(sub);
             cipher += this->plugboard ? this->plugboard->swap(sub) : sub;
         }
+    }else if (std::holds_alternative<DrumAssemblyK>(*this->assembly)){
+        for(auto i = msg.begin(); i < msg.end(); i++) {
+            char sub = this->plugboard ? this->plugboard->swap(*i) : *i;
+            sub = std::get<DrumAssemblyK>(*this->assembly).process_letter(sub);
+            cipher += this->plugboard ? this->plugboard->swap(sub) : sub;
+        }
     }
     return cipher;
 }
