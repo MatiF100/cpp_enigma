@@ -196,7 +196,7 @@ DrumAssemblyK& DrumAssemblyK::operator=(const DrumAssemblyK& assembly){
 
 std::string DrumAssemblyK::get_configuration() {
     std::stringstream config;
-    config << "2" << *this->right << *this->middle << *this->left << *this->leftmost << *this->reflector << std::endl;
+    config << "2" << std::endl << *this->right << *this->middle << *this->left << *this->leftmost << *this->reflector;
     config << (unsigned int)this->offset[0] << " " << (unsigned int)this->offset[1] << " " << (unsigned int)this->offset[2] << " " <<  (unsigned int)this->leftmost_offset << " " << (unsigned int)this->refl_offset << std::endl;
     return config.str();
 }
@@ -207,7 +207,7 @@ bool DrumAssemblyK::set_configuration_from_string(std::string cfg) {
     int type;
     config >> type;
     //This means we are trying to load wrong configuration
-    if (type != 1)
+    if (type != 2)
         return false;
     if (this->right == nullptr)
         this->right = new Drum();

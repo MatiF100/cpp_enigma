@@ -155,11 +155,13 @@ bool Machine::load_config(std::string& filename) {
         std::string line;
         std::stringstream config;
 
-        //Type
+        //type
         std::getline(source, line);
         config << line << std::endl;
 
         //Drum 1
+        std::getline(source, line);
+        config << line << std::endl;
         std::getline(source, line);
         config << line << std::endl;
         std::getline(source, line);
@@ -174,6 +176,8 @@ bool Machine::load_config(std::string& filename) {
         config << line << std::endl;
         std::getline(source, line);
         config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
 
         //Drum 3
         std::getline(source, line);
@@ -182,8 +186,12 @@ bool Machine::load_config(std::string& filename) {
         config << line << std::endl;
         std::getline(source, line);
         config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
 
         //Reflector
+        std::getline(source, line);
+        config << line << std::endl;
         std::getline(source, line);
         config << line << std::endl;
         std::getline(source, line);
@@ -206,15 +214,13 @@ bool Machine::load_config(std::string& filename) {
         std::string line;
         std::stringstream config;
 
-        //Type
-        std::getline(source, line);
-        config << line << std::endl;
-        std::getline(source, line);
-        config << line << std::endl;
+        //type
         std::getline(source, line);
         config << line << std::endl;
 
         //Drum 1
+        std::getline(source, line);
+        config << line << std::endl;
         std::getline(source, line);
         config << line << std::endl;
         std::getline(source, line);
@@ -229,8 +235,12 @@ bool Machine::load_config(std::string& filename) {
         config << line << std::endl;
         std::getline(source, line);
         config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
 
         //Drum 3
+        std::getline(source, line);
+        config << line << std::endl;
         std::getline(source, line);
         config << line << std::endl;
         std::getline(source, line);
@@ -245,8 +255,12 @@ bool Machine::load_config(std::string& filename) {
         config << line << std::endl;
         std::getline(source, line);
         config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
 
         //Reflector
+        std::getline(source, line);
+        config << line << std::endl;
         std::getline(source, line);
         config << line << std::endl;
         std::getline(source, line);

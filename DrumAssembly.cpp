@@ -216,7 +216,7 @@ DrumAssembly& DrumAssembly::operator=(const DrumAssembly &assembly) {
 
 std::string DrumAssembly::get_configuration() {
     std::stringstream config;
-    config << "1" << *this->right << *this->middle << *this->left << *this->reflector << std::endl;
+    config << "1" << std::endl << *this->right << *this->middle << *this->left << *this->reflector;
     config << (unsigned int)this->offset[0] << " " << (unsigned int)this->offset[1] << " " << (unsigned int)this->offset[2] << " " << (unsigned int)this->refl_offset << std::endl;
     return config.str();
 }

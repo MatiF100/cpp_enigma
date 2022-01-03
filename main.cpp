@@ -83,7 +83,7 @@ int main() {
 
     // Our state
     static Plugboard* pboard = new Plugboard();
-    bool show_demo_window = true;
+    bool show_demo_window = false;
     bool show_drums_window = false;
     bool show_plugboard_window = false;
     bool show_input_window = false;
@@ -145,7 +145,6 @@ int main() {
                 drums.open("drums.cfg", std::ios_base::in);
             }else if (standard_drums.empty() && reflectors.empty() && thin_drums.empty() && thin_reflectors.empty()){
                 Drum tmp;
-                drums >> tmp.name;
                 while(drums >> tmp){
                     if(tmp.narrow == true && tmp.reflector == false)
                         thin_drums.push_back(tmp);
@@ -154,8 +153,6 @@ int main() {
                     else if(tmp.narrow == false && tmp.reflector == true)
                         reflectors.push_back(tmp);
                     else standard_drums.push_back(tmp);
-
-                    drums >> tmp.name;
                 }
                 drums.close();
             }
