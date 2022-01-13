@@ -168,8 +168,12 @@ bool Machine::load_config(std::string& filename) {
         config << line << std::endl;
         std::getline(source, line);
         config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
 
         //Drum 2
+        std::getline(source, line);
+        config << line << std::endl;
         std::getline(source, line);
         config << line << std::endl;
         std::getline(source, line);
@@ -188,8 +192,12 @@ bool Machine::load_config(std::string& filename) {
         config << line << std::endl;
         std::getline(source, line);
         config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
 
         //Reflector
+        std::getline(source, line);
+        config << line << std::endl;
         std::getline(source, line);
         config << line << std::endl;
         std::getline(source, line);
@@ -227,8 +235,12 @@ bool Machine::load_config(std::string& filename) {
         config << line << std::endl;
         std::getline(source, line);
         config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
 
         //Drum 2
+        std::getline(source, line);
+        config << line << std::endl;
         std::getline(source, line);
         config << line << std::endl;
         std::getline(source, line);
@@ -247,6 +259,8 @@ bool Machine::load_config(std::string& filename) {
         config << line << std::endl;
         std::getline(source, line);
         config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
 
         //Drum 4
         std::getline(source, line);
@@ -257,8 +271,12 @@ bool Machine::load_config(std::string& filename) {
         config << line << std::endl;
         std::getline(source, line);
         config << line << std::endl;
+        std::getline(source, line);
+        config << line << std::endl;
 
         //Reflector
+        std::getline(source, line);
+        config << line << std::endl;
         std::getline(source, line);
         config << line << std::endl;
         std::getline(source, line);

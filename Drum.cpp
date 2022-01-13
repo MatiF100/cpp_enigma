@@ -178,7 +178,7 @@ std::ostream &operator<<(std::ostream &os, const Drum &drum) {
     for(auto i = drum.outputs.begin(); i<drum.outputs.end(); i++ ){
         os << *i;
     }
-    os << std::endl << (char)(drum.notch_location + 'A') << std::endl << (unsigned int)drum.narrow << std::endl;
+    os << std::endl << (char)(drum.notch_location + 'A') << std::endl << (unsigned int)drum.ring_offset << std::endl << (unsigned int)drum.narrow << std::endl;
     return os;
 }
 
@@ -186,14 +186,16 @@ std::istream &operator>>(std::istream &is, Drum &drum) {
     std::string tmp;
     drum.reflector = true;
     char nl_tmp;
+    int ro_tmp;
     int nr_tmp;
-    is >> drum.name >> tmp >> nl_tmp >> nr_tmp;
+    is >> drum.name >> tmp >> nl_tmp >> ro_tmp >> nr_tmp;
     drum.outputs.resize(26);
     for(int i = 0; i < tmp.length(); i++){
         drum.outputs[i] = tmp[i];
     }
     drum.notch_location = nl_tmp - 'A';
-    drum.narrow = nr_tmp == 1 ? true : false;
+    drum.ring_offset = ro_tmp;
+    drum.narrow = nr_tmp == 1;
 
     for(auto iter = drum.outputs.begin(); iter<drum.outputs.end(); ++iter){
         if (drum.process_character_forward(*iter, 0) != drum.process_character_backward(*iter, 0)){
