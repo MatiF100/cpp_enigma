@@ -17,14 +17,29 @@
  */
 class DrumAssembly {
 private:
+    //! Pointer to the right drum object
     Drum* right;
+
+    //! Pointer to the middle drum object
     Drum* middle;
+
+    //! Pointer to the left drum object
     Drum* left;
+
+    //! Pointer to the reflector drum object
     Drum* reflector;
+
+    //! Array of standard drums offsets
     uint8_t offset[3] = {0,0,0};
+
+    //! Offset of the reflecor drum
     uint8_t refl_offset = 0;
 
-    //Friend functions are declared, since they require some redesign, which in turn requires access to some private fields of this class
+    //! Friend functions are declared, since they require some redesign, which in turn requires access to some private fields of this class
+    /*!
+     * These fields aren't declared as protected and therefore available to the child classes
+     * Because it isn't safe to allow their "free" modification
+     */
     friend class DrumAssemblyK;
 
 public:

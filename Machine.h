@@ -23,8 +23,17 @@
  * This was though an option that civil versions of enigma (lacking one drum and having reversing drum's wheel exposed) offered
  */
 class Machine {
+    //!Field holding current variant of Drum Assembly
+    /*!
+     * This is to ensure, that we always have one of valid options and can differentiate between them
+     * Without resorting to additional informational fields and nullptr casting
+     */
     std::unique_ptr<std::variant<DrumAssemblyK, DrumAssembly>> assembly;
+
+    //!Field holding pointer to current plugboard state
     std::unique_ptr<Plugboard> plugboard;
+
+    //!Field storing machine's buffer, when operating in stream mode
     std::string buffer;
 public:
     //!Default constructor. Will create empty machine, without any modules attatched

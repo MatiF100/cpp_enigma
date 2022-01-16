@@ -19,7 +19,10 @@
  * This redesigning is marked in they structure by setting the "narrow" flag during creation
  */
 class DrumAssemblyK : public DrumAssembly {
+    //! Additional leftmost drum
     Drum* leftmost;
+
+    //! Offset of the additional drum
     uint8_t leftmost_offset;
 
     /*! Overriden old set_drums and function

@@ -14,6 +14,11 @@
  * Hence the name "Plugboard" or "Plug switchboard"
  */
 class Plugboard {
+
+    //! Map of substitutions
+    /*!
+     * It allows fast access to given letter's substitute on current plugboard's state
+     */
     std::unordered_map<char, char> substitutions;
 public:
     //! There is no need for default constructor
